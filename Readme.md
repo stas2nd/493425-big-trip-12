@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Анастасия Добротина](https://up.htmlacademy.ru/ecmascript/12/user/493425).
-* Наставник: `Неизвестно`.
+* Наставник: [Иван Кривонос](https://up.htmlacademy.ru/ecmascript/12/user/1311037).
 
 ---
 
