@@ -135,7 +135,7 @@ const OFFER_ARAY = [
 
 const makeTemplateFromArray = (array, func) => {
   return array?.reduce((accumulator, currentValue) => {
-    return accumulator + func(...Object.values(currentValue))
+    return accumulator + func(currentValue)
   }, ``) || ``;
 }
 
@@ -163,7 +163,7 @@ const createHeadPriceTemplate = () => {
   );
 };
 
-const createMenuTabTemplate = (text, href, state = ``) => {
+const createMenuTabTemplate = ({text, href, state = ``}) => {
   return (
     `<a class="trip-tabs__btn ${state}" href="${href}">${text}</a>`
   );
@@ -179,7 +179,7 @@ const createMenuTemplate = (links) => {
   );
 };
 
-const createFilterItemTemplate = (value, text, state = '') => {
+const createFilterItemTemplate = ({value, text, state = ''}) => {
   return (
     `<div class="trip-filters__filter">
       <input id="filter-${value}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${value}" ${state}>
@@ -199,7 +199,7 @@ const createFilterTemplate = (filters) => {
   );
 };
 
-const createSortingItemTemplate = (interactive, id, text, icon = false, state =``) => {
+const createSortingItemTemplate = ({interactive, id, text, icon = false, state =``}) => {
   const imgIcon = `<svg class="trip-sort__direction-icon" width="8" height="10" viewBox="0 0 8 10">
     <path d="M2.888 4.852V9.694H5.588V4.852L7.91 5.068L4.238 0.00999987L0.548 5.068L2.888 4.852Z"/>
   </svg>`;
@@ -245,7 +245,7 @@ const createDayTemplate = () => {
   );
 };
 
-const createEditingEventOptionTemplate = (value, text, state = '') => {
+const createEditingEventOptionTemplate = ({value, text, state = ''}) => {
   return (
     `<div class="event__type-item">
       <input id="event-type-${value}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${value}">
@@ -328,7 +328,7 @@ const createEditingEventDetailsTemplate = () => {
   );
 };
 
-const createEditingEventOfferItemTemplate = (id, text, price, state = '') => {
+const createEditingEventOfferItemTemplate = ({id, text, price, state = ''}) => {
   return (
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}-1" type="checkbox" name="event-offer-${id}" ${state}>
