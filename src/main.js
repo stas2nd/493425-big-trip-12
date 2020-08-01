@@ -135,9 +135,9 @@ const OFFER_ARAY = [
 
 const makeTemplateFromArray = (array, func) => {
   return array ? array.reduce((accumulator, currentValue) => {
-    return accumulator + func(currentValue)
+    return accumulator + func(currentValue);
   }, ``) : ``;
-}
+};
 
 const createHeadInfoTemplate = () => {
   return (
@@ -179,14 +179,14 @@ const createMenuTemplate = (links) => {
   );
 };
 
-const createFilterItemTemplate = ({value, text, state = ''}) => {
+const createFilterItemTemplate = ({value, text, state = ``}) => {
   return (
     `<div class="trip-filters__filter">
       <input id="filter-${value}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${value}" ${state}>
       <label class="trip-filters__filter-label" for="filter-${value}">${text}</label>
     </div>`
   );
-}
+};
 
 const createFilterTemplate = (filters) => {
   filters = makeTemplateFromArray(filters, createFilterItemTemplate);
@@ -199,22 +199,22 @@ const createFilterTemplate = (filters) => {
   );
 };
 
-const createSortingItemTemplate = ({interactive, id, text, icon = false, state =``}) => {
+const createSortingItemTemplate = ({interactive, id, text, icon = false, state = ``}) => {
   const imgIcon = `<svg class="trip-sort__direction-icon" width="8" height="10" viewBox="0 0 8 10">
     <path d="M2.888 4.852V9.694H5.588V4.852L7.91 5.068L4.238 0.00999987L0.548 5.068L2.888 4.852Z"/>
   </svg>`;
   return (
     interactive ?
-    `<div class="trip-sort__item  trip-sort__item--${id}">
-      <input id="sort-${id}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${id}" ${state}>
-      <label class="trip-sort__btn" for="sort-${id}">
-        ${text}
-        ${icon ? imgIcon : ''}
-      </label>
-    </div>`
-    : `<span class="trip-sort__item  trip-sort__item--${id}">${text}</span>`
+      `<div class="trip-sort__item  trip-sort__item--${id}">
+        <input id="sort-${id}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${id}" ${state}>
+        <label class="trip-sort__btn" for="sort-${id}">
+          ${text}
+          ${icon ? imgIcon : ``}
+        </label>
+      </div>`
+      : `<span class="trip-sort__item  trip-sort__item--${id}">${text}</span>`
   );
-}
+};
 
 const createSortingTemplate = (sortItems) => {
   sortItems = makeTemplateFromArray(sortItems, createSortingItemTemplate);
@@ -245,14 +245,14 @@ const createDayTemplate = () => {
   );
 };
 
-const createEditingEventOptionTemplate = ({value, text, state = ''}) => {
+const createEditingEventOptionTemplate = ({value, text, state = ``}) => {
   return (
     `<div class="event__type-item">
-      <input id="event-type-${value}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${value}">
+      <input id="event-type-${value}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${value}" ${state}>
       <label class="event__type-label  event__type-label--${value}" for="event-type-${value}-1">${text}</label>
     </div>`
   );
-}
+};
 
 const createEditingEventTemplate = (transportOpts, activityOpts) => {
   transportOpts = makeTemplateFromArray(transportOpts, createEditingEventOptionTemplate);
@@ -328,7 +328,7 @@ const createEditingEventDetailsTemplate = () => {
   );
 };
 
-const createEditingEventOfferItemTemplate = ({id, text, price, state = ''}) => {
+const createEditingEventOfferItemTemplate = ({id, text, price, state = ``}) => {
   return (
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}-1" type="checkbox" name="event-offer-${id}" ${state}>
@@ -339,7 +339,7 @@ const createEditingEventOfferItemTemplate = ({id, text, price, state = ''}) => {
       </label>
     </div>`
   );
-}
+};
 
 const createEditingEventOffersTemplate = (offers) => {
   offers = makeTemplateFromArray(offers, createEditingEventOfferItemTemplate);
