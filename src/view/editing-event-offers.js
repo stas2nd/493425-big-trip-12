@@ -1,8 +1,8 @@
-import {makeTemplateFromArray} from "../main.js";
+import {makeTemplateFromArray} from "../utils.js";
 import {createEditingEventOfferItemTemplate} from "./editing-event-offer-item.js";
 
 export const createEditingEventOffersTemplate = (offers) => {
-  offers = makeTemplateFromArray(offers, createEditingEventOfferItemTemplate);
+  offers = makeTemplateFromArray(createEditingEventOfferItemTemplate, offers);
 
   return (
     `<section class="event__section  event__section--offers">
