@@ -1,19 +1,16 @@
 import {createElement} from "../utils.js";
 
-const createEditingEventDestinationItemTemplate = (city) => {
-  return (
-    `<option value="${city}"></option>`
-  );
+const createNoEventsTemplate = () => {
+  return `<p class="trip-events__msg">Click New Event to create your first point</p>`;
 };
 
-export default class EditingEventDestinationItem {
-  constructor(city) {
+export default class NoEvents {
+  constructor() {
     this._element = null;
-    this._city = city;
   }
 
   getTemplate() {
-    return createEditingEventDestinationItemTemplate(this._city);
+    return createNoEventsTemplate();
   }
 
   getElement() {

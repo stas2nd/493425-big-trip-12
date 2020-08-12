@@ -1,8 +1,8 @@
-import {makeTemplateFromArray} from "../utils.js";
-import {createEditingEventOfferItemTemplate} from "./editing-event-offer-item.js";
+import {makeTemplateFromArrayClass, createElement} from "../utils.js";
+import EditingEventOfferView from "./editing-event-offer-item.js";
 
-export const createEditingEventOffersTemplate = (offers) => {
-  offers = makeTemplateFromArray(createEditingEventOfferItemTemplate, offers);
+const createEditingEventOffersTemplate = (offers) => {
+  offers = makeTemplateFromArrayClass(EditingEventOfferView, offers);
 
   return (
     `<section class="event__section  event__section--offers">
@@ -13,3 +13,26 @@ export const createEditingEventOffersTemplate = (offers) => {
     </section>`
   );
 };
+
+export default class EditingEventOffers {
+  constructor(offers) {
+    this._element = null;
+    this._offers = offers;
+  }
+
+  getTemplate() {
+    return createEditingEventOffersTemplate(this._offers);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

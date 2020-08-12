@@ -1,13 +1,29 @@
-import {makeTemplateFromArray, getDayEvents} from "../utils";
-import {createDayTemplate} from "./day.js";
+import {createElement} from "../utils";
 
-export const createListDaysTemplate = (events) => {
-  events = getDayEvents(events);
-
-  const days = makeTemplateFromArray(createDayTemplate, events);
+const createListDaysTemplate = () => {
   return (
-    `<ul class="trip-days">
-      ${days}
-    </ul>`
+    `<ul class="trip-days"></ul>`
   );
 };
+
+export default class ListDays {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createListDaysTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

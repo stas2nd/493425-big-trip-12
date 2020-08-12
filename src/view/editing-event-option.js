@@ -1,4 +1,6 @@
-export const createEditingEventOptionTemplate = ({name}, rest) => {
+import {createElement} from "../utils.js";
+
+const createEditingEventOptionTemplate = ({name}, rest) => {
   const active = rest.find((v) => v.name !== undefined).name;
   const text = name.charAt(0).toUpperCase() + name.slice(1);
   return (
@@ -8,3 +10,27 @@ export const createEditingEventOptionTemplate = ({name}, rest) => {
     </div>`
   );
 };
+
+export default class EditingEventOption {
+  constructor(option, rest) {
+    this._element = null;
+    this._option = option;
+    this._rest = rest;
+  }
+
+  getTemplate() {
+    return createEditingEventOptionTemplate(this._option, this._rest);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

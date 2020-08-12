@@ -1,4 +1,6 @@
-export const createEditingEventOfferItemTemplate = ({name, text, price, choosed}) => {
+import {createElement} from "../utils.js";
+
+const createEditingEventOfferItemTemplate = ({name, text, price, choosed}) => {
   return (
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${name}-1" type="checkbox" name="event-offer-${name}" ${choosed ? `checked` : ``}>
@@ -10,3 +12,26 @@ export const createEditingEventOfferItemTemplate = ({name, text, price, choosed}
     </div>`
   );
 };
+
+export default class EditingEventOffer {
+  constructor(offer) {
+    this._element = null;
+    this._offer = offer;
+  }
+
+  getTemplate() {
+    return createEditingEventOfferItemTemplate(this._offer);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

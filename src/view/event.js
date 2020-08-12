@@ -1,11 +1,10 @@
-import {makeTemplateFromArray} from "../utils";
-import {createEventOfferTemplate} from "./event-offer.js";
-import {getHumanizeDiffTime, formatHours} from "../utils";
+import EventOfferView from "./event-offer.js";
+import {getHumanizeDiffTime, formatHours, makeTemplateFromArrayClass, createElement} from "../utils";
 
-export const createEventTemplate = (event) => {
+const createEventTemplate = (event) => {
   const optText = event.action.name.charAt(0).toUpperCase() + event.action.name.slice(1);
   const pretext = event.action.type === `transport` ? `to` : `in`;
-  const offers = event.offers ? makeTemplateFromArray(createEventOfferTemplate, event.offers.slice(0, 3)) : ``;
+  const offers = event.offers ? makeTemplateFromArrayClass(EventOfferView, event.offers.slice(0, 3)) : ``;
   return (
     `<li class="trip-events__item">
       <div class="event">
@@ -40,3 +39,26 @@ export const createEventTemplate = (event) => {
     </li>`
   );
 };
+
+export default class Event {
+  constructor(event) {
+    this._element = null;
+    this._event = event;
+  }
+
+  getTemplate() {
+    return createEventTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

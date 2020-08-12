@@ -1,11 +1,12 @@
-import {makeTemplateFromArray} from "../utils.js";
-import {createEditingEventOptionTemplate} from "./editing-event-option.js";
+import {makeTemplateFromArrayClass, createElement} from "../utils.js";
+import EditingEventOptionView from "./editing-event-option.js";
+import {ACTIONS} from "../const.js";
 
-export const createEditingEventOptionsTemplate = (actions, active) => {
-  const transportOpts = actions.filter((action) => action.type === `transport`);
-  const arrivalOpts = actions.filter((action) => action.type === `arrival`);
-  const transportOptsTemplate = makeTemplateFromArray(createEditingEventOptionTemplate, transportOpts, active);
-  const arrivalOptsTemplate = makeTemplateFromArray(createEditingEventOptionTemplate, arrivalOpts, active);
+const createEditingEventOptionsTemplate = (action) => {
+  const transportOpts = ACTIONS.filter((act) => act.type === `transport`);
+  const arrivalOpts = ACTIONS.filter((act) => act.type === `arrival`);
+  const transportOptsTemplate = makeTemplateFromArrayClass(EditingEventOptionView, transportOpts, action);
+  const arrivalOptsTemplate = makeTemplateFromArrayClass(EditingEventOptionView, arrivalOpts, action);
   return (
     `<div class="event__type-list">
       <fieldset class="event__type-group">
@@ -20,3 +21,26 @@ export const createEditingEventOptionsTemplate = (actions, active) => {
     </div>`
   );
 };
+
+export default class EditingEventOptions {
+  constructor(action) {
+    this._element = null;
+    this._action = action;
+  }
+
+  getTemplate() {
+    return createEditingEventOptionsTemplate(this._action);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
