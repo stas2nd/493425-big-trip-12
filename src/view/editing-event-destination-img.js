@@ -1,11 +1,5 @@
 import {createElement} from "../utils";
 
-const createEditingEventDestinationImgTemplate = (src) => {
-  return (
-    `<img class="event__photo" src="${src}" alt="Event photo">`
-  );
-};
-
 export default class EditingEventDestinationImg {
   constructor(img) {
     this._element = null;
@@ -13,7 +7,9 @@ export default class EditingEventDestinationImg {
   }
 
   getTemplate() {
-    return createEditingEventDestinationImgTemplate(this._img);
+    return (
+      `<img class="event__photo" src="${this._img}" alt="Event photo">`
+    );
   }
 
   getElement() {

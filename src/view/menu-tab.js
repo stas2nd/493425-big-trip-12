@@ -1,11 +1,5 @@
 import {createElement} from "../utils.js";
 
-const createMenuTabTemplate = ({text, href, state = ``}) => {
-  return (
-    `<a class="trip-tabs__btn ${state}" href="${href}">${text}</a>`
-  );
-};
-
 export default class MenuTab {
   constructor(tab) {
     this._element = null;
@@ -13,7 +7,7 @@ export default class MenuTab {
   }
 
   getTemplate() {
-    return createMenuTabTemplate(this._tab);
+    return `<a class="trip-tabs__btn ${this._tab.state ? this._tab.state : ``}" href="${this._tab.href}">${this._tab.text}</a>`;
   }
 
   getElement() {

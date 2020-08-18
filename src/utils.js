@@ -1,4 +1,4 @@
-import {ACTIONS, RENDER_POSITION} from "./const.js";
+import {ACTIONS} from "./const.js";
 
 const getCurrentDate = () => {
   const currentDate = new Date();
@@ -7,14 +7,11 @@ const getCurrentDate = () => {
   return currentDate;
 };
 
-export const render = (container, element, place) => {
-  switch (place) {
-    case RENDER_POSITION.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case RENDER_POSITION.BEFOREEND:
-      container.append(element);
-      break;
+export const render = (container, element, isAfterBegin = false) => {
+  if (isAfterBegin) {
+    container.prepend(element);
+  } else {
+    container.append(element);
   }
 };
 
@@ -65,7 +62,7 @@ export const getOffersPrice = (event) => {
 };
 
 export const humanizeDate = (dueDate) => {
-  return dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`});
+  return dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`}) || ``;
 };
 
 export const getHumanizeDiffTime = (time) => {

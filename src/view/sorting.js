@@ -1,23 +1,18 @@
 import {makeTemplateFromArrayClass, createElement} from "../utils.js";
 import SortingItemView from "./sorting-item.js";
 
-const createSortingTemplate = (sortItems) => {
-  sortItems = makeTemplateFromArrayClass(SortingItemView, sortItems);
-  return (
-    `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-      ${sortItems}
-    </form>`
-  );
-};
-
 export default class Sorting {
   constructor(sortings) {
     this._element = null;
-    this._sortings = sortings;
+    this._sortings = makeTemplateFromArrayClass(SortingItemView, sortings);
   }
 
   getTemplate() {
-    return createSortingTemplate(this._sortings);
+    return (
+      `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+        ${this._sortings}
+      </form>`
+    );
   }
 
   getElement() {

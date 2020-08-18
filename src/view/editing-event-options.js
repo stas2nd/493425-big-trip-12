@@ -2,34 +2,29 @@ import {makeTemplateFromArrayClass, createElement} from "../utils.js";
 import EditingEventOptionView from "./editing-event-option.js";
 import {ACTIONS} from "../const.js";
 
-const createEditingEventOptionsTemplate = (action) => {
-  const transportOpts = ACTIONS.filter((act) => act.type === `transport`);
-  const arrivalOpts = ACTIONS.filter((act) => act.type === `arrival`);
-  const transportOptsTemplate = makeTemplateFromArrayClass(EditingEventOptionView, transportOpts, action);
-  const arrivalOptsTemplate = makeTemplateFromArrayClass(EditingEventOptionView, arrivalOpts, action);
-  return (
-    `<div class="event__type-list">
-      <fieldset class="event__type-group">
-        <legend class="visually-hidden">Transfer</legend>
-        ${transportOptsTemplate}
-      </fieldset>
-
-      <fieldset class="event__type-group">
-        <legend class="visually-hidden">Activity</legend>
-        ${arrivalOptsTemplate}
-      </fieldset>
-    </div>`
-  );
-};
-
 export default class EditingEventOptions {
-  constructor(action) {
+  constructor(action, count) {
     this._element = null;
-    this._action = action;
+    this._transportOpts = ACTIONS.filter((act) => act.type === `transport`);
+    this._arrivalOpts = ACTIONS.filter((act) => act.type === `arrival`);
+    this._transportOptsTemplate = makeTemplateFromArrayClass(EditingEventOptionView, this._transportOpts, action, {currentId: count});
+    this._arrivalOptsTemplate = makeTemplateFromArrayClass(EditingEventOptionView, this._arrivalOpts, action, {currentId: count});
   }
 
   getTemplate() {
-    return createEditingEventOptionsTemplate(this._action);
+    return (
+      `<div class="event__type-list">
+        <fieldset class="event__type-group">
+          <legend class="visually-hidden">Transfer</legend>
+          ${this._transportOptsTemplate}
+        </fieldset>
+
+        <fieldset class="event__type-group">
+          <legend class="visually-hidden">Activity</legend>
+          ${this._arrivalOptsTemplate}
+        </fieldset>
+      </div>`
+    );
   }
 
   getElement() {

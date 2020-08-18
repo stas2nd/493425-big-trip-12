@@ -1,11 +1,5 @@
 import {createElement} from "../utils.js";
 
-const createEditingEventDestinationItemTemplate = (city) => {
-  return (
-    `<option value="${city}"></option>`
-  );
-};
-
 export default class EditingEventDestinationItem {
   constructor(city) {
     this._element = null;
@@ -13,7 +7,9 @@ export default class EditingEventDestinationItem {
   }
 
   getTemplate() {
-    return createEditingEventDestinationItemTemplate(this._city);
+    return (
+      `<option value="${this._city}"></option>`
+    );
   }
 
   getElement() {

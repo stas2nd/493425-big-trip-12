@@ -1,20 +1,5 @@
 import {createElement} from "../utils.js";
 
-const createHeadInfoTemplate = ({route, dates, price}) => {
-  return (
-    `<section class="trip-main__trip-info  trip-info">
-    ${dates ?
-      `<div class="trip-info__main">
-        ${route ? `<h1 class="trip-info__title">${route}</h1>` : ``}
-        <p class="trip-info__dates">${dates}</p>
-      </div>` : ``}
-      <p class="trip-info__cost">
-        Total: &euro;&nbsp;<span class="trip-info__cost-value">${price}</span>
-      </p>
-    </section>`
-  );
-};
-
 export default class HeadInfo {
   constructor(info) {
     this._element = null;
@@ -22,7 +7,18 @@ export default class HeadInfo {
   }
 
   getTemplate() {
-    return createHeadInfoTemplate(this._info);
+    return (
+      `<section class="trip-main__trip-info  trip-info">
+      ${this._info.dates ?
+        `<div class="trip-info__main">
+          ${this._info.route ? `<h1 class="trip-info__title">${this._info.route}</h1>` : ``}
+          <p class="trip-info__dates">${this._info.dates}</p>
+        </div>` : ``}
+        <p class="trip-info__cost">
+          Total: &euro;&nbsp;<span class="trip-info__cost-value">${this._info.price}</span>
+        </p>
+      </section>`
+    );
   }
 
   getElement() {

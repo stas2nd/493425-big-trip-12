@@ -1,6 +1,5 @@
 import {generateEvent} from "./mock/event.js";
 import {generateInfo} from "./mock/info.js";
-import {RENDER_POSITION} from "./const.js";
 import {render, getDayEvents} from "./utils.js";
 import HeadInfoView from "./view/head-info.js";
 import SortingView from "./view/sorting.js";
@@ -16,6 +15,7 @@ import DayView from "./view/day.js";
 // import {generateFilters} from "./mock/filters.js";
 
 const EVENT_COUNT = 8;
+let counter = 0;
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
 const headInfo = generateInfo(events);
 // const filters = generateFilters(events);
@@ -80,13 +80,13 @@ const SORT_ITEM_ARRAY = [
   }
 ];
 
-const renderEvent = (dayComponent, event) => {
+const renderEvent = (dayComponent, event, count) => {
   const eventComponent = new EventView(event);
   let eventEditComponent;
 
   const closeEditForm = (evt) => {
     evt.preventDefault();
-    eventEditComponent.getElement().removeEventListener(`click`, closeEditForm);
+    eventEditComponent.getElement().querySelector(`.event__rollup-btn`).removeEventListener(`click`, closeEditForm);
     replaceFormToCard();
     document.removeEventListener(`keydown`, onEscKeyDown);
   };
@@ -102,9 +102,9 @@ const renderEvent = (dayComponent, event) => {
   };
 
   const replaceCardToForm = () => {
-    eventEditComponent = new EditingEventView(event);
+    eventEditComponent = new EditingEventView(event, count);
     eventEditComponent.getElement().addEventListener(`submit`, onSubmitForm);
-    eventEditComponent.getElement().addEventListener(`click`, closeEditForm);
+    eventEditComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, closeEditForm);
     dayComponent.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
     document.addEventListener(`keydown`, onEscKeyDown);
   };
@@ -120,14 +120,17 @@ const renderEvent = (dayComponent, event) => {
     replaceCardToForm();
   });
 
-  render(dayComponent, eventComponent.getElement(), RENDER_POSITION.BEFOREEND);
+  render(dayComponent, eventComponent.getElement());
 };
 
 const renderDay = (eventListElement, dayInfo, index) => {
   const dayComponent = new DayView(dayInfo.day, index);
-  render(eventListElement, dayComponent.getElement(), RENDER_POSITION.BEFOREEND);
+  render(eventListElement, dayComponent.getElement());
   const dayListEvents = dayComponent.getElement().querySelector(`.trip-events__list`);
-  dayInfo.events.forEach((dayEvent) => renderEvent(dayListEvents, dayEvent));
+  dayInfo.events.forEach((dayEvent) => {
+    renderEvent(dayListEvents, dayEvent, counter);
+    counter += 1;
+  });
 };
 
 const renderEvents = (daysEvents) => {
@@ -136,12 +139,12 @@ const renderEvents = (daysEvents) => {
   const listComponent = new ListDaysView();
 
   if (!daysEvents.length) {
-    render(siteContentElement, new NoEventsView().getElement(), RENDER_POSITION.BEFOREEND);
+    render(siteContentElement, new NoEventsView().getElement());
     return;
   }
 
-  render(siteContentElement, new SortingView(SORT_ITEM_ARRAY).getElement(), RENDER_POSITION.BEFOREEND);
-  render(siteContentElement, listComponent.getElement(), RENDER_POSITION.BEFOREEND);
+  render(siteContentElement, new SortingView(SORT_ITEM_ARRAY).getElement());
+  render(siteContentElement, listComponent.getElement());
   daysEvents.forEach((dayEvent, index) => renderDay(listComponent.getElement(), dayEvent, index));
 };
 
@@ -149,9 +152,9 @@ const siteHeaderElement = document.querySelector(`.page-header`);
 const siteMainElement = document.querySelector(`.page-main`);
 const siteHeaderMainElement = siteHeaderElement.querySelector(`.trip-main`);
 
-render(siteHeaderMainElement, new HeadInfoView(headInfo).getElement(), RENDER_POSITION.AFTERBEGIN);
+render(siteHeaderMainElement, new HeadInfoView(headInfo).getElement(), true);
 const siteHeaderControlsElement = siteHeaderMainElement.querySelector(`.trip-controls`);
-render(siteHeaderControlsElement, new MenuView(TAB_ARRAY).getElement(), RENDER_POSITION.BEFOREEND);
-render(siteHeaderControlsElement, new FilterView(FILTER_ARAY).getElement(), RENDER_POSITION.BEFOREEND);
+render(siteHeaderControlsElement, new MenuView(TAB_ARRAY).getElement());
+render(siteHeaderControlsElement, new FilterView(FILTER_ARAY).getElement());
 
 renderEvents(events);
