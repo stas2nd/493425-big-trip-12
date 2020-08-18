@@ -1,20 +1,34 @@
-import {makeTemplateFromArray} from "../utils";
-import {humanizeDate} from "../utils";
-import {createEventTemplate} from "./event.js";
+import {createElement, humanizeDate} from "../utils";
 
-export const createDayTemplate = ({day, events}, rest) => {
-  const index = rest.find((v) => v.arrayIndex !== undefined).arrayIndex + 1;
-  events = makeTemplateFromArray(createEventTemplate, events);
+export default class Day {
+  constructor(day, index) {
+    this._element = null;
+    this._day = day;
+    this._index = day ? index += 1 : ``;
+  }
 
-  return (
-    `<li class="trip-days__item  day">
-      <div class="day__info">
-        <span class="day__counter">${index}</span>
-        <time class="day__date" datetime="${day}">${humanizeDate(day)}</time>
-      </div>
-      <ul class="trip-events__list">
-      ${events}
-      </ul>
-    </li>`
-  );
-};
+  getTemplate() {
+    return (
+      `<li class="trip-days__item  day">
+        <div class="day__info">
+          <span class="day__counter">${this._index}</span>
+          <time class="day__date" datetime="${this._day}">${humanizeDate(this._day)}</time>
+        </div>
+        <ul class="trip-events__list">
+        </ul>
+      </li>`
+    );
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

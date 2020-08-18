@@ -22,15 +22,21 @@ const getPrice = (events) => {
 };
 
 export const generateInfo = (events) => {
-  events = events.sort((a, b) => a.start - b.start);
-  const route = getRoute(events);
-  const dates = getDates(events);
-  const price = getPrice(events);
-
+  if (events.length) {
+    events = events.sort((a, b) => a.start - b.start);
+    const route = getRoute(events);
+    const dates = getDates(events);
+    const price = getPrice(events);
+    return {
+      route,
+      dates,
+      price
+    };
+  }
   return {
-    route,
-    dates,
-    price
+    route: null,
+    dates: null,
+    price: 0
   };
 };
 
