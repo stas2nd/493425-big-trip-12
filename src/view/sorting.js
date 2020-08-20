@@ -1,10 +1,13 @@
-import {makeTemplateFromArrayClass, createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 import SortingItemView from "./sorting-item.js";
+import {SORT_ITEM_ARRAY} from "../const.js";
 
-export default class Sorting {
-  constructor(sortings) {
-    this._element = null;
-    this._sortings = makeTemplateFromArrayClass(SortingItemView, sortings);
+export default class Sorting extends AbstractView {
+  constructor() {
+    super();
+    this._sortings = this._makeTemplateFromArrayClass(SortingItemView, SORT_ITEM_ARRAY);
+
+    this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
@@ -15,15 +18,13 @@ export default class Sorting {
     );
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _sortTypeChangeHandler() {
+    const type = Array.from(this.getElement().querySelectorAll(`.trip-sort__input`)).find((input) => input.checked).value.slice(5);
+    this._callback.sortTypeChange(type);
   }
 
-  removeElement() {
-    this._element = null;
+  setSortTypeChangeHandler(callback) {
+    this._callback.sortTypeChange = callback;
+    this.getElement().addEventListener(`click`, this._sortTypeChangeHandler);
   }
 }

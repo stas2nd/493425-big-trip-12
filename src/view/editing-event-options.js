@@ -1,14 +1,14 @@
-import {makeTemplateFromArrayClass, createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 import EditingEventOptionView from "./editing-event-option.js";
 import {ACTIONS} from "../const.js";
 
-export default class EditingEventOptions {
+export default class EditingEventOptions extends AbstractView {
   constructor(action, count) {
-    this._element = null;
+    super();
     this._transportOpts = ACTIONS.filter((act) => act.type === `transport`);
     this._arrivalOpts = ACTIONS.filter((act) => act.type === `arrival`);
-    this._transportOptsTemplate = makeTemplateFromArrayClass(EditingEventOptionView, this._transportOpts, action, {currentId: count});
-    this._arrivalOptsTemplate = makeTemplateFromArrayClass(EditingEventOptionView, this._arrivalOpts, action, {currentId: count});
+    this._transportOptsTemplate = this._makeTemplateFromArrayClass(EditingEventOptionView, this._transportOpts, action, {currentId: count});
+    this._arrivalOptsTemplate = this._makeTemplateFromArrayClass(EditingEventOptionView, this._arrivalOpts, action, {currentId: count});
   }
 
   getTemplate() {
@@ -25,17 +25,5 @@ export default class EditingEventOptions {
         </fieldset>
       </div>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

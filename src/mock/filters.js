@@ -1,4 +1,4 @@
-import {isFutureEvent, isPastEvent} from "../utils.js";
+import {isFutureEvent, isPastEvent} from "../utils/event.js";
 
 const taskToFilterMap = {
   everything: (events) => events,
@@ -12,6 +12,6 @@ export const generateFilters = (events) => {
   return Object.entries(taskToFilterMap).map(([filterName, filterEvents]) => (
     {
       name: filterName,
-      count: filterEvents(events),
+      events: filterEvents(events),
     }));
 };

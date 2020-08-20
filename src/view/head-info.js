@@ -1,8 +1,8 @@
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
-export default class HeadInfo {
+export default class HeadInfo extends AbstractView {
   constructor(info) {
-    this._element = null;
+    super();
     this._info = info;
   }
 
@@ -19,17 +19,5 @@ export default class HeadInfo {
         </p>
       </section>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

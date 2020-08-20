@@ -1,10 +1,10 @@
-import {makeTemplateFromArrayClass, createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 import MenuTabView from "./menu-tab.js";
 
-export default class Menu {
+export default class Menu extends AbstractView {
   constructor(links) {
-    this._element = null;
-    this._links = makeTemplateFromArrayClass(MenuTabView, links);
+    super();
+    this._links = this._makeTemplateFromArrayClass(MenuTabView, links);
   }
 
   getTemplate() {
@@ -16,17 +16,5 @@ export default class Menu {
         </nav>
       </div>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

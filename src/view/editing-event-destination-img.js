@@ -1,8 +1,8 @@
-import {createElement} from "../utils";
+import AbstractView from "./abstract.js";
 
-export default class EditingEventDestinationImg {
+export default class EditingEventDestinationImg extends AbstractView {
   constructor(img) {
-    this._element = null;
+    super();
     this._img = img;
   }
 
@@ -10,17 +10,5 @@ export default class EditingEventDestinationImg {
     return (
       `<img class="event__photo" src="${this._img}" alt="Event photo">`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,13 +1,16 @@
 import EventOfferView from "./event-offer.js";
-import {getHumanizeDiffTime, formatHours, makeTemplateFromArrayClass, createElement} from "../utils";
+import {getHumanizeDiffTime, formatHours} from "../utils/event";
+import AbstractView from "./abstract.js";
 
-export default class Event {
+export default class Event extends AbstractView {
   constructor(event) {
-    this._element = null;
+    super();
     this._event = event;
     this._optText = this._event.action.name.charAt(0).toUpperCase() + this._event.action.name.slice(1);
     this._pretext = this._event.action.type === `transport` ? `to` : `in`;
-    this._offers = this._event.offers ? makeTemplateFromArrayClass(EventOfferView, this._event.offers.filter((offer) => offer.choosed).slice(0, 3)) : ``;
+    this._offers = this._event.offers ? this._makeTemplateFromArrayClass(EventOfferView, this._event.offers.filter((offer) => offer.choosed).slice(0, 3)) : ``;
+
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -46,15 +49,13 @@ export default class Event {
     );
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setEditClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editClickHandler);
   }
 }

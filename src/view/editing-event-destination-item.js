@@ -1,8 +1,8 @@
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
-export default class EditingEventDestinationItem {
+export default class EditingEventDestinationItem extends AbstractView {
   constructor(city) {
-    this._element = null;
+    super();
     this._city = city;
   }
 
@@ -10,17 +10,5 @@ export default class EditingEventDestinationItem {
     return (
       `<option value="${this._city}"></option>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,8 +1,8 @@
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
-export default class FilterItem {
+export default class FilterItem extends AbstractView {
   constructor(filter) {
-    this._element = null;
+    super();
     this._filter = filter;
   }
 
@@ -13,17 +13,5 @@ export default class FilterItem {
         <label class="trip-filters__filter-label" for="filter-${this._filter.value}">${this._filter.text}</label>
       </div>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

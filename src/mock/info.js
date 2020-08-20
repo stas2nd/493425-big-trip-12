@@ -1,4 +1,4 @@
-import {humanizeDate, getOffersPrice} from "../utils.js";
+import {humanizeDate, getOffersPrice} from "../utils/event.js";
 
 const getRoute = (events) => {
   let cities = events.map((city) => city.waypoint);
