@@ -21,7 +21,7 @@ export default class Trip {
   }
 
   init(tripEvents) {
-    this._sourcedTripEvents = tripEvents.slice();
+    this._sourcedTripEvents = [...tripEvents];
 
     this._renderTrip();
   }
@@ -31,13 +31,13 @@ export default class Trip {
       event: (events) => getDayEvents(events),
       time: (events) => [{
         day: null,
-        events: events.slice().sort((a, b) => {
+        events: [...events].sort((a, b) => {
           return (b.end - b.start) - (a.end - a.start);
         })
       }],
       price: (events) => [{
         day: null,
-        events: events.slice().sort((a, b) => {
+        events: [...events].sort((a, b) => {
           return (b.price + getOffersPrice(b)) - (a.price + getOffersPrice(a));
         })
       }],

@@ -56,7 +56,7 @@ export const getHumanizeDiffTime = (time) => {
 };
 
 export const getDayEvents = (events) => {
-  events = events.slice().sort((a, b) => a.start - b.start);
+  events = [...events].sort((a, b) => a.start - b.start);
   let eventDays = [];
   events.forEach((event) => {
     const date = new Date(event.start).setHours(0, 0, 0, 0);
