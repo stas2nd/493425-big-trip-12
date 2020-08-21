@@ -1,43 +1,11 @@
-import {ACTIONS} from "./const.js";
+import {ACTIONS} from "../const.js";
+import {getRandomInteger} from "./common.js";
 
 const getCurrentDate = () => {
   const currentDate = new Date();
   currentDate.setHours(23, 59, 59, 999);
 
   return currentDate;
-};
-
-export const render = (container, element, isAfterBegin = false) => {
-  if (isAfterBegin) {
-    container.prepend(element);
-  } else {
-    container.append(element);
-  }
-};
-
-export const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-  return newElement.firstChild;
-};
-
-export const makeTemplateFromArray = (func, array, ...rest) => {
-  return array ? array.reduce((accumulator, currentValue, index) => {
-    return accumulator + func(currentValue, [...rest, {arrayIndex: index}]);
-  }, ``) : ``;
-};
-
-export const makeTemplateFromArrayClass = (CL, array, ...rest) => {
-  return array ? array.reduce((accumulator, currentValue, index) => {
-    return accumulator + new CL(currentValue, [...rest, {arrayIndex: index}]).getTemplate();
-  }, ``) : ``;
-};
-
-export const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
 export const getRandomAction = () => {
@@ -62,7 +30,7 @@ export const getOffersPrice = (event) => {
 };
 
 export const humanizeDate = (dueDate) => {
-  return dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`}) || ``;
+  return dueDate && dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`}) || ``;
 };
 
 export const getHumanizeDiffTime = (time) => {
@@ -88,7 +56,7 @@ export const getHumanizeDiffTime = (time) => {
 };
 
 export const getDayEvents = (events) => {
-  events = events.sort((a, b) => a.start - b.start);
+  events = [...events].sort((a, b) => a.start - b.start);
   let eventDays = [];
   events.forEach((event) => {
     const date = new Date(event.start).setHours(0, 0, 0, 0);

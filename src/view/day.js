@@ -1,8 +1,9 @@
-import {createElement, humanizeDate} from "../utils";
+import {humanizeDate} from "../utils/event";
+import AbstractView from "./abstract.js";
 
-export default class Day {
+export default class Day extends AbstractView {
   constructor(day, index) {
-    this._element = null;
+    super();
     this._day = day;
     this._index = day ? index += 1 : ``;
   }
@@ -18,17 +19,5 @@ export default class Day {
         </ul>
       </li>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

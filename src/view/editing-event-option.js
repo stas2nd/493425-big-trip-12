@@ -1,8 +1,8 @@
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
-export default class EditingEventOption {
+export default class EditingEventOption extends AbstractView {
   constructor(option, rest) {
-    this._element = null;
+    super();
     this._option = option;
     this._active = rest.find((v) => v.name !== undefined).name;
     this._id = rest.find((v) => v.currentId !== undefined).currentId;
@@ -16,17 +16,5 @@ export default class EditingEventOption {
         <label class="event__type-label  event__type-label--${this._option.name}" for="event-type-${this._option.name}-${this._id}">${this._text}</label>
       </div>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

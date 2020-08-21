@@ -1,11 +1,11 @@
-import {makeTemplateFromArrayClass, createElement} from "../utils";
 import EditingEventDestinationImgView from "./editing-event-destination-img.js";
+import AbstractView from "./abstract.js";
 
-export default class EditingEventDestination {
+export default class EditingEventDestination extends AbstractView {
   constructor(text, images) {
-    this._element = null;
+    super();
     this._text = text;
-    this._images = makeTemplateFromArrayClass(EditingEventDestinationImgView, images);
+    this._images = this._makeTemplateFromArrayClass(EditingEventDestinationImgView, images);
   }
 
   getTemplate() {
@@ -20,17 +20,5 @@ export default class EditingEventDestination {
         </div>
       </section>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

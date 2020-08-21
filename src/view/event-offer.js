@@ -1,8 +1,8 @@
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
-export default class EventOffer {
+export default class EventOffer extends AbstractView {
   constructor(offer) {
-    this._element = null;
+    super();
     this._offer = offer;
   }
 
@@ -14,17 +14,5 @@ export default class EventOffer {
         &euro;&nbsp;<span class="event__offer-price">${this._offer.price}</span>
       </li>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

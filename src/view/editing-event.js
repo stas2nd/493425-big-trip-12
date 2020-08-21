@@ -1,23 +1,27 @@
-import {makeTemplateFromArrayClass, formatDate, createElement} from "../utils.js";
+import {formatDate} from "../utils/event.js";
 import EditingEventOptionsView from "./editing-event-options.js";
 import EditingEventDestinationItemView from "./editing-event-destination-item.js";
 import EditingEventOffersView from "./editing-event-offers.js";
 import EditingEventDestinationView from "./editing-event-destination.js";
+import AbstractView from "./abstract.js";
 
-export default class EditingEvent {
+export default class EditingEvent extends AbstractView {
   constructor(event, count) {
-    this._element = null;
+    super();
     this._event = event;
     this._count = count;
     this._opts = new EditingEventOptionsView(this._event.action, this._count).getTemplate();
     this._optText = this._event.action.name.charAt(0).toUpperCase() + this._event.action.name.slice(1);
     this._pretext = this._event.action.type === `transport` ? `to` : `in`;
-    this._cities = makeTemplateFromArrayClass(EditingEventDestinationItemView, this._event.cities);
+    this._cities = this._makeTemplateFromArrayClass(EditingEventDestinationItemView, this._event.cities);
     this._start = this._event.start;
     this._end = this._event.end;
 
     this._offers = new EditingEventOffersView(this._event.offers, this._count).getTemplate();
     this._destination = new EditingEventDestinationView(this._event.description, this._event.images).getTemplate();
+
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formCloseHandler = this._formSubmitHandler.bind(this);
   }
 
   getTemplate() {
@@ -85,15 +89,37 @@ export default class EditingEvent {
     );
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  removeFormSubmitHandler() {
+    if (this._callback.formSubmit) {
+      this.getElement().removeEventListener(`submit`, this._formSubmitHandler);
+      delete this._callback.formSubmit;
+    }
+  }
+
+  _formCloseHandler(evt) {
+    evt.preventDefault();
+    this._callback.formClose();
+  }
+
+  setFormCloseHandler(callback) {
+    this._callback.formClose = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formCloseHandler);
+  }
+
+  removeFormCloseHandler() {
+    if (this._callback.formClose) {
+      this.getElement().querySelector(`.event__rollup-btn`).removeEventListener(`click`, this._formCloseHandler);
+      delete this._callback.formClose;
+    }
   }
 }

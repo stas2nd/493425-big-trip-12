@@ -1,4 +1,4 @@
-import {getRandomInteger} from "../utils.js";
+import {getRandomInteger} from "../utils/common.js";
 import {OFFERS, KIND_OFFER, ACTIONS, WAY_POINTS, DESCRIPTION} from "../const.js";
 
 const generatePoint = () => {

@@ -1,4 +1,4 @@
-import {humanizeDate, getOffersPrice} from "../utils.js";
+import {humanizeDate, getOffersPrice} from "../utils/event.js";
 
 const getRoute = (events) => {
   let cities = events.map((city) => city.waypoint);
@@ -23,7 +23,7 @@ const getPrice = (events) => {
 
 export const generateInfo = (events) => {
   if (events.length) {
-    events = events.sort((a, b) => a.start - b.start);
+    events = [...events].sort((a, b) => a.start - b.start);
     const route = getRoute(events);
     const dates = getDates(events);
     const price = getPrice(events);

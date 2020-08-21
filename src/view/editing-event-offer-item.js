@@ -1,8 +1,8 @@
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
-export default class EditingEventOffer {
+export default class EditingEventOffer extends AbstractView {
   constructor(offer, rest) {
-    this._element = null;
+    super();
     this._offer = offer;
     this._id = rest.find((v) => v.currentId !== undefined).currentId;
   }
@@ -18,17 +18,5 @@ export default class EditingEventOffer {
         </label>
       </div>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,10 +1,10 @@
-import {makeTemplateFromArrayClass, createElement} from "../utils.js";
 import EditingEventOfferView from "./editing-event-offer-item.js";
+import AbstractView from "./abstract.js";
 
-export default class EditingEventOffers {
+export default class EditingEventOffers extends AbstractView {
   constructor(offers, count) {
-    this._element = null;
-    this._offers = makeTemplateFromArrayClass(EditingEventOfferView, offers, {currentId: count});
+    super();
+    this._offers = this._makeTemplateFromArrayClass(EditingEventOfferView, offers, {currentId: count});
   }
 
   getTemplate() {
@@ -16,17 +16,5 @@ export default class EditingEventOffers {
         </div>
       </section>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
