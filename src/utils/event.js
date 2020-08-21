@@ -30,10 +30,7 @@ export const getOffersPrice = (event) => {
 };
 
 export const humanizeDate = (dueDate) => {
-  if (!dueDate) {
-    return ``;
-  }
-  return dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`}) || ``;
+  return dueDate && dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`}) || ``;
 };
 
 export const getHumanizeDiffTime = (time) => {

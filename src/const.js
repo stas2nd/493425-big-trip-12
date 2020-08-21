@@ -79,31 +79,26 @@ export const DESCRIPTION = `Lorem ipsum dolor sit amet, consectetur adipiscing e
 export const SORT_ITEM_ARRAY = [
   {
     interactive: false,
-    id: `day`,
     text: `Day`
   },
   {
     interactive: true,
-    id: `event`,
     text: `Event`,
     icon: false,
     state: `checked`
   },
   {
     interactive: true,
-    id: `time`,
     text: `Time`,
     icon: true
   },
   {
     interactive: true,
-    id: `price`,
     text: `Price`,
     icon: true
   },
   {
     interactive: false,
-    id: `offers`,
     text: `Offers`
   }
 ];

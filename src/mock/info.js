@@ -23,7 +23,7 @@ const getPrice = (events) => {
 
 export const generateInfo = (events) => {
   if (events.length) {
-    events = events.sort((a, b) => a.start - b.start);
+    events = events.slice().sort((a, b) => a.start - b.start);
     const route = getRoute(events);
     const dates = getDates(events);
     const price = getPrice(events);
