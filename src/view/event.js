@@ -1,5 +1,5 @@
 import EventOfferView from "./event-offer.js";
-import {getHumanizeDiffTime, formatHours} from "../utils/event";
+import {formatHours, getDiffTime} from "../utils/event";
 import AbstractView from "./abstract.js";
 
 export default class Event extends AbstractView {
@@ -28,7 +28,7 @@ export default class Event extends AbstractView {
               &mdash;
               <time class="event__end-time" datetime="${this._event.end}">${formatHours(this._event.end)}</time>
             </p>
-            <p class="event__duration">${getHumanizeDiffTime(this._event.end - this._event.start)}</p>
+            <p class="event__duration">${getDiffTime(this._event.start, this._event.end)}</p>
           </div>
 
           <p class="event__price">

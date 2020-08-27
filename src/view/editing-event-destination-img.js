@@ -8,7 +8,7 @@ export default class EditingEventDestinationImg extends AbstractView {
 
   getTemplate() {
     return (
-      `<img class="event__photo" src="${this._img}" alt="Event photo">`
+      this._img ? `<img class="event__photo" src="${this._img}" alt="Event photo">` : ``
     );
   }
 }
