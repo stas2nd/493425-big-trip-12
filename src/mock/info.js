@@ -1,4 +1,4 @@
-import {humanizeDate, getOffersPrice} from "../utils/event.js";
+import {formatEventDate, getOffersPrice} from "../utils/event.js";
 
 const getRoute = (events) => {
   let cities = events.map((city) => city.waypoint);
@@ -10,9 +10,9 @@ const getRoute = (events) => {
 
 const getDates = (events) => {
   if (events[0].start.getMonth() === events[events.length - 1].end.getMonth()) {
-    return `${humanizeDate(events[0].start)} — ${events[events.length - 1].end.getDate()}`;
+    return `${events[0].start.getDate()} — ${formatEventDate(events[events.length - 1].end)}`;
   }
-  return `${humanizeDate(events[0].start)} — ${humanizeDate(events[events.length - 1].end)}`;
+  return `${formatEventDate(events[0].start)} — ${formatEventDate(events[events.length - 1].end)}`;
 };
 
 const getPrice = (events) => {

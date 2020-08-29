@@ -1,4 +1,4 @@
-import {humanizeDate} from "../utils/event";
+import {formatEventDate} from "../utils/event";
 import AbstractView from "./abstract.js";
 
 export default class Day extends AbstractView {
@@ -13,7 +13,7 @@ export default class Day extends AbstractView {
       `<li class="trip-days__item  day">
         <div class="day__info">
           <span class="day__counter">${this._index}</span>
-          <time class="day__date" datetime="${this._day}">${humanizeDate(this._day)}</time>
+          <time class="day__date" datetime="${this._day}">${formatEventDate(this._day)}</time>
         </div>
         <ul class="trip-events__list">
         </ul>
