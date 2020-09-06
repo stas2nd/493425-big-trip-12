@@ -16,11 +16,14 @@ export default class EditingEvent extends SmartView {
     this._startDatepicker = null;
     this._endDatepicker = null;
 
+    this._validatedPrice = this._data.price ? true : false;
+
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._formCloseHandler = this._formCloseHandler.bind(this);
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
     this._destinationBlurHandler = this._destinationBlurHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
     this._priceBlurHandler = this._priceBlurHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._offersChangeHandler = this._offersChangeHandler.bind(this);
@@ -43,7 +46,7 @@ export default class EditingEvent extends SmartView {
     this._offers = new EditingEventOffersView(this._data.offers, this._data.id).getTemplate();
     this._destination = new EditingEventDestinationView(this._data.description, this._data.images).getTemplate();
 
-    const isSubmitDisabled = !this._data.cities.includes(this._data.waypoint) || !/^\d+$/.test(this._data.price);
+    const isSubmitDisabled = !this._data.cities.includes(this._data.waypoint) || !this._validatedPrice;
 
     return (
       `<form class="trip-events__item  event event--edit" action="#" method="post">
@@ -88,7 +91,7 @@ export default class EditingEvent extends SmartView {
             </div>
 
             <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>
-            <button class="event__reset-btn" type="reset">Delete</button>
+            <button class="event__reset-btn" type="reset">${this._data.id === `new` ? `Cancel` : `Delete`}</button>
 
             <input id="event-favorite-${this._data.id}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${this._data.isFavorite ? `checked` : ``}>
             <label class="event__favorite-btn" for="event-favorite-${this._data.id}">
@@ -148,7 +151,7 @@ export default class EditingEvent extends SmartView {
         }
     );
     if (this._data.start) {
-      this._startDatepicker.defaultDate = this._data.start;
+      this._startDatepicker.setDate(this._data.start);
     }
   }
 
@@ -159,6 +162,7 @@ export default class EditingEvent extends SmartView {
     }
 
     const inputName = `event-end-time`;
+
     this._endDatepicker = flatpickr(
         this.getElement().querySelector(`[name=${inputName}]`),
         {
@@ -167,8 +171,11 @@ export default class EditingEvent extends SmartView {
           onChange: this._endDateChangeHandler
         }
     );
+
     if (this._data.end) {
-      this._endDatepicker.defaultDate = this._data.end;
+      this._endDatepicker.setDate(this._data.end);
+      this._endDatepicker.set(`minDate`, this._data.start);
+      this._startDatepicker.set(`maxDate`, this._data.end);
     }
   }
 
@@ -179,6 +186,9 @@ export default class EditingEvent extends SmartView {
     this.getElement()
       .querySelector(`.event__input--destination`)
       .addEventListener(`blur`, this._destinationBlurHandler);
+    this.getElement()
+      .querySelector(`.event__input--price`)
+      .addEventListener(`input`, this._priceInputHandler);
     this.getElement()
       .querySelector(`.event__input--price`)
       .addEventListener(`blur`, this._priceBlurHandler);
@@ -196,12 +206,14 @@ export default class EditingEvent extends SmartView {
     this.updateData({
       start: userDate
     });
+    this._endDatepicker.set(`minDate`, userDate);
   }
 
   _endDateChangeHandler([userDate]) {
     this.updateData({
       end: userDate
     });
+    this._startDatepicker.set(`maxDate`, userDate);
   }
 
   _eventTypeChangeHandler() {
@@ -234,11 +246,16 @@ export default class EditingEvent extends SmartView {
     }
   }
 
+  _priceInputHandler(evt) {
+    this._validatedPrice = /^[1-9]\d*$/.test(evt.target.value);
+    this.getElement().querySelector(`.event__save-btn`).disabled = !this._validatedPrice;
+  }
+
   _priceBlurHandler(evt) {
     evt.preventDefault();
-    if (this._data.price !== Number(evt.target.value)) {
+    if (this._data.price !== evt.target.value) {
       this.updateData({
-        price: Number(evt.target.value)
+        price: evt.target.value
       });
     }
   }

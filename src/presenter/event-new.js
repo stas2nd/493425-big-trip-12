@@ -25,6 +25,7 @@ export default class EventNew {
     this._eventEditComponent = new EditingEventView();
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._eventEditComponent.setFormCloseHandler(this._handleDeleteClick);
 
     const sortElement = this._eventsContainer.querySelector(`.trip-events__trip-sort`);
     if (sortElement) {

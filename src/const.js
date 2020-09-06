@@ -1,43 +1,90 @@
+export const ACTIONS_MAP = {
+  RIDE: {
+    name: `RIDE`,
+    icon: `🚕`
+  },
+  TRAIN: {
+    name: `TRAIN`,
+    icon: `🚆`
+  },
+  SAIL: {
+    name: `SAIL`,
+    icon: `🚢`
+  },
+  DRIVE: {
+    name: `DRIVE`,
+    icon: `🚗`
+  },
+  FLY: {
+    name: `FLY`,
+    icon: `✈️`
+  },
+  STAY: {
+    name: `STAY`,
+    alternative: `HOTEL`,
+    icon: `🏨`
+  },
+  LOOK: {
+    name: `LOOK`,
+    alternative: `SIGHTSEEING`,
+    icon: `🏛️`
+  },
+  EAT: {
+    name: `EAT`,
+    alternative: `RESTAURANT`,
+    icon: `🍽️`
+  }
+};
 export const ACTIONS = [
   {
     name: `taxi`,
-    type: `transport`
+    type: `transport`,
+    label: ACTIONS_MAP.RIDE
   },
   {
     name: `bus`,
-    type: `transport`
+    type: `transport`,
+    label: ACTIONS_MAP.RIDE
   },
   {
     name: `train`,
-    type: `transport`
+    type: `transport`,
+    label: ACTIONS_MAP.TRAIN
   },
   {
     name: `ship`,
-    type: `transport`
+    type: `transport`,
+    label: ACTIONS_MAP.SAIL
   },
   {
     name: `transport`,
-    type: `transport`
+    type: `transport`,
+    label: ACTIONS_MAP.RIDE
   },
   {
     name: `drive`,
-    type: `transport`
+    type: `transport`,
+    label: ACTIONS_MAP.DRIVE
   },
   {
     name: `flight`,
-    type: `transport`
+    type: `transport`,
+    label: ACTIONS_MAP.FLY
   },
   {
     name: `check-in`,
-    type: `arrival`
+    type: `arrival`,
+    label: ACTIONS_MAP.STAY
   },
   {
     name: `sightseeing`,
-    type: `arrival`
+    type: `arrival`,
+    label: ACTIONS_MAP.LOOK
   },
   {
     name: `restaurant`,
-    type: `arrival`
+    type: `arrival`,
+    label: ACTIONS_MAP.EAT
   },
 ];
 export const WAY_POINTS = [

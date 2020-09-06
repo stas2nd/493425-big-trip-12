@@ -25,6 +25,7 @@ export default class Menu extends AbstractView {
       return;
     }
     evt.preventDefault();
+    this.setMenuItem(evt.target.dataset.tab);
     this._callback.menuClick(evt.target.dataset.tab);
   }
 

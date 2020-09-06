@@ -54,6 +54,10 @@ export const getDiffTime = (start, end) => {
   return moment.duration((end - start), `milliseconds`).format(`DD[D] HH[H] mm[M]`);
 };
 
+export const getDiffTimeHours = (start, end) => {
+  return moment.duration(end - start).asHours();
+};
+
 export const formatHours = (date) => {
   return date instanceof Date ? moment(date).format(`HH:mm`) : ``;
 };

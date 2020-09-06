@@ -2,12 +2,11 @@ import {generateEvent} from "./mock/event.js";
 import {generateInfo} from "./mock/info.js";
 import {render} from "./utils/render.js";
 import HeadInfoView from "./view/head-info.js";
-import MenuView from "./view/menu.js";
 import TripPresenter from "./presenter/trip.js";
 import FilterPresenter from "./presenter/filter.js";
 import EventsModel from "./model/events.js";
 import FilterModel from "./model/filters.js";
-import {MenuItem, UpdateType, FilterType} from "./const.js";
+import TabsPresenter from "./presenter/tabs.js";
 
 const EVENT_COUNT = 8;
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
@@ -26,44 +25,10 @@ const siteEventsElement = siteMainElement.querySelector(`.trip-events`);
 render(siteHeaderMainElement, new HeadInfoView(headInfo), true);
 const siteHeaderControlsElement = siteHeaderMainElement.querySelector(`.trip-controls`);
 
-const menuComponent = new MenuView();
-render(siteHeaderControlsElement, menuComponent);
-
 const tripPresenter = new TripPresenter(siteEventsElement, eventsModel, filterModel);
 const filterPresenter = new FilterPresenter(siteHeaderControlsElement, filterModel, eventsModel);
-
-const handleEventNewFormClose = () => {
-  document.querySelector(`.trip-main__event-add-btn`).disabled = false;
-  menuComponent.setMenuItem(MenuItem.TABLE);
-};
-
-const handleChangeView = (targetClick) => {
-  switch (targetClick) {
-    case `ADD_NEW_EVENT`:
-      // Скрыть статистику
-      tripPresenter.destroy();
-      filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-      tripPresenter.init();
-      tripPresenter.createEvent(handleEventNewFormClose);
-      document.querySelector(`.trip-main__event-add-btn`).disabled = true;
-      break;
-    case MenuItem.TABLE:
-      tripPresenter.init();
-      // Скрыть статистику
-      break;
-    case MenuItem.STATS:
-      tripPresenter.destroy();
-      // Показать статистику
-      break;
-  }
-};
-
-menuComponent.setMenuClickHandler(handleChangeView);
+const tabsPresenter = new TabsPresenter(siteEventsElement, tripPresenter, eventsModel, filterModel);
 
 tripPresenter.init();
 filterPresenter.init();
-
-document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
-  evt.preventDefault();
-  handleChangeView(`ADD_NEW_EVENT`);
-});
+tabsPresenter.init();
