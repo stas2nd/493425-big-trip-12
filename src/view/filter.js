@@ -2,9 +2,11 @@ import AbstractView from "./abstract.js";
 import FilterItemView from "./filter-item.js";
 
 export default class Filter extends AbstractView {
-  constructor(filters) {
+  constructor(filters, currentFilterType) {
     super();
-    this._filters = this._makeTemplateFromArrayClass(FilterItemView, filters);
+    this._filters = this._makeTemplateFromArrayClass(FilterItemView, filters, {type: currentFilterType});
+
+    this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
@@ -17,5 +19,15 @@ export default class Filter extends AbstractView {
         </form>
       </div>`
     );
+  }
+
+  _filterTypeChangeHandler(evt) {
+    evt.preventDefault();
+    this._callback.filterTypeChange(evt.target.value);
+  }
+
+  setFilterTypeChangeHandler(callback) {
+    this._callback.filterTypeChange = callback;
+    this.getElement().addEventListener(`change`, this._filterTypeChangeHandler);
   }
 }

@@ -2,6 +2,8 @@
 import {render, replace, remove} from "../utils/render.js";
 import EditingEventView from "../view/editing-event.js";
 import EventView from "../view/event.js";
+import {UserAction, UpdateType} from "../const.js";
+import {isDatesEqual, isArraysEqual} from "../utils/event.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -20,7 +22,9 @@ export default class Event {
 
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._replaceFormToCard = this._replaceFormToCard.bind(this);
   }
 
   init(event) {
@@ -62,6 +66,7 @@ export default class Event {
     this._eventEditComponent = new EditingEventView(this._event);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditComponent.setFormCloseHandler(this._replaceFormToCard);
+    this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
     replace(this._eventEditComponent, this._eventComponent);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
@@ -88,9 +93,27 @@ export default class Event {
     this._replaceCardToForm();
   }
 
-  _handleFormSubmit(event) {
-    this._changeData(event);
+  _handleFormSubmit(update) {
+    const isMinorUpdate =
+      !isDatesEqual(this._event.start, update.start) ||
+      !isDatesEqual(this._event.end, update.end) ||
+      this._event.price !== update.price ||
+      !isArraysEqual(this._event.offers, update.offers);
+
+    this._changeData(
+        UserAction.UPDATE_EVENT,
+        isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+        update
+    );
     this._replaceFormToCard();
+  }
+
+  _handleDeleteClick(event) {
+    this._changeData(
+        UserAction.DELETE_EVENT,
+        UpdateType.MINOR,
+        event
+    );
   }
 
   destroy() {

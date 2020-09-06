@@ -84,8 +84,7 @@ export const SORT_ITEM_ARRAY = [
   {
     interactive: true,
     text: `Event`,
-    icon: false,
-    state: `checked`
+    icon: false
   },
   {
     interactive: true,
@@ -103,7 +102,49 @@ export const SORT_ITEM_ARRAY = [
   }
 ];
 export const SortType = {
-  EVENT: `sort-event`,
-  TIME: `sort-time`,
-  PRICE: `sort-price`
+  EVENT: `event`,
+  TIME: `time`,
+  PRICE: `price`
 };
+export const UserAction = {
+  UPDATE_EVENT: `UPDATE_EVENT`,
+  ADD_EVENT: `ADD_EVENT`,
+  DELETE_EVENT: `DELETE_EVENT`
+};
+export const UpdateType = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
+export const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
+};
+export const BLANK_EVENT = {
+  action: ACTIONS[0],
+  cities: WAY_POINTS,
+  waypoint: null,
+  start: null,
+  end: null,
+  price: null,
+  offers: null,
+  description: null,
+  images: null,
+  isFavorite: false,
+  id: `new`
+};
+export const MenuItem = {
+  TABLE: `table`,
+  STATS: `stats`
+};
+export const TAB_ARRAY = [
+  {
+    name: `table`,
+    text: `Table`
+  },
+  {
+    name: `stats`,
+    text: `Stats`
+  }
+];

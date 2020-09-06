@@ -3,9 +3,10 @@ import SortingItemView from "./sorting-item.js";
 import {SORT_ITEM_ARRAY} from "../const.js";
 
 export default class Sorting extends AbstractView {
-  constructor() {
+  constructor(currentSortType) {
     super();
-    this._sortings = this._makeTemplateFromArrayClass(SortingItemView, SORT_ITEM_ARRAY);
+    this._currentSortType = currentSortType;
+    this._sortings = this._makeTemplateFromArrayClass(SortingItemView, SORT_ITEM_ARRAY, {type: this._currentSortType});
 
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
