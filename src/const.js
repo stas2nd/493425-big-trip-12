@@ -1,43 +1,90 @@
+export const ACTIONS_MAP = {
+  RIDE: {
+    name: `RIDE`,
+    icon: `🚕`
+  },
+  TRAIN: {
+    name: `TRAIN`,
+    icon: `🚆`
+  },
+  SAIL: {
+    name: `SAIL`,
+    icon: `🚢`
+  },
+  DRIVE: {
+    name: `DRIVE`,
+    icon: `🚗`
+  },
+  FLY: {
+    name: `FLY`,
+    icon: `✈️`
+  },
+  STAY: {
+    name: `STAY`,
+    alternative: `HOTEL`,
+    icon: `🏨`
+  },
+  LOOK: {
+    name: `LOOK`,
+    alternative: `SIGHTSEEING`,
+    icon: `🏛️`
+  },
+  EAT: {
+    name: `EAT`,
+    alternative: `RESTAURANT`,
+    icon: `🍽️`
+  }
+};
 export const ACTIONS = [
   {
     name: `taxi`,
-    type: `transport`
+    type: `transport`,
+    label: ACTIONS_MAP.RIDE
   },
   {
     name: `bus`,
-    type: `transport`
+    type: `transport`,
+    label: ACTIONS_MAP.RIDE
   },
   {
     name: `train`,
-    type: `transport`
+    type: `transport`,
+    label: ACTIONS_MAP.TRAIN
   },
   {
     name: `ship`,
-    type: `transport`
+    type: `transport`,
+    label: ACTIONS_MAP.SAIL
   },
   {
     name: `transport`,
-    type: `transport`
+    type: `transport`,
+    label: ACTIONS_MAP.RIDE
   },
   {
     name: `drive`,
-    type: `transport`
+    type: `transport`,
+    label: ACTIONS_MAP.DRIVE
   },
   {
     name: `flight`,
-    type: `transport`
+    type: `transport`,
+    label: ACTIONS_MAP.FLY
   },
   {
     name: `check-in`,
-    type: `arrival`
+    type: `arrival`,
+    label: ACTIONS_MAP.STAY
   },
   {
     name: `sightseeing`,
-    type: `arrival`
+    type: `arrival`,
+    label: ACTIONS_MAP.LOOK
   },
   {
     name: `restaurant`,
-    type: `arrival`
+    type: `arrival`,
+    label: ACTIONS_MAP.EAT
   },
 ];
 export const WAY_POINTS = [
@@ -84,8 +131,7 @@ export const SORT_ITEM_ARRAY = [
   {
     interactive: true,
     text: `Event`,
-    icon: false,
-    state: `checked`
+    icon: false
   },
   {
     interactive: true,
@@ -103,7 +149,49 @@ export const SORT_ITEM_ARRAY = [
   }
 ];
 export const SortType = {
-  EVENT: `sort-event`,
-  TIME: `sort-time`,
-  PRICE: `sort-price`
+  EVENT: `event`,
+  TIME: `time`,
+  PRICE: `price`
 };
+export const UserAction = {
+  UPDATE_EVENT: `UPDATE_EVENT`,
+  ADD_EVENT: `ADD_EVENT`,
+  DELETE_EVENT: `DELETE_EVENT`
+};
+export const UpdateType = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
+export const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
+};
+export const BLANK_EVENT = {
+  action: ACTIONS[0],
+  cities: WAY_POINTS,
+  waypoint: null,
+  start: null,
+  end: null,
+  price: null,
+  offers: null,
+  description: null,
+  images: null,
+  isFavorite: false,
+  id: `new`
+};
+export const MenuItem = {
+  TABLE: `table`,
+  STATS: `stats`
+};
+export const TAB_ARRAY = [
+  {
+    name: `table`,
+    text: `Table`
+  },
+  {
+    name: `stats`,
+    text: `Stats`
+  }
+];

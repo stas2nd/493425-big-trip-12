@@ -41,7 +41,27 @@ export const replace = (newChild, oldChild) => {
   parent.replaceChild(newChild, oldChild);
 };
 
+export const insertAfter = (first, second) => {
+  if (first instanceof Abstract) {
+    first = first.getElement();
+  }
+
+  if (second instanceof Abstract) {
+    second = second.getElement();
+  }
+
+  if (first === null || second === null) {
+    throw new Error(`Can't insert unexisting elements`);
+  }
+
+  first.after(second);
+};
+
 export const remove = (component) => {
+  if (component === null) {
+    return;
+  }
+
   if (!(component instanceof Abstract)) {
     throw new Error(`Can remove only components`);
   }

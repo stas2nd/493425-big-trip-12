@@ -11,21 +11,35 @@ const getCurrentDate = () => {
   return currentDate;
 };
 
+const isObjectsEqual = (a, b) => {
+  return Object.keys(a).length === Object.keys(b).length && Object.keys(a).every((prop) => a[prop] === b[prop]);
+};
+
+const sortObjectsFunction = (a, b) => {
+  if (a.name > b.name) {
+    return 1;
+  }
+  if (a.name < b.name) {
+    return -1;
+  }
+  return 0;
+};
+
 export const getRandomAction = () => {
   return ACTIONS[getRandomInteger(0, ACTIONS.length - 1)];
 };
 
 export const isPastEvent = (date) => {
-  return date && getCurrentDate().getTime() > date.getTime();
+  return date.end && moment(getCurrentDate()).isAfter(date.end, `day`);
 };
 
 export const isFutureEvent = (date) => {
-  return date && getCurrentDate().getTime() < date.getTime();
+  return date.start && moment(getCurrentDate()).isBefore(date.start, `day`);
 };
 
 export const getOffersPrice = (event) => {
   if (event.offers) {
-    return event.offers.reduce((accumulator, currentValue) => {
+    return event.offers.filter((offer) => offer.checked).reduce((accumulator, currentValue) => {
       return accumulator + currentValue.price;
     }, 0);
   }
@@ -38,6 +52,10 @@ export const formatEventDate = (date) => {
 
 export const getDiffTime = (start, end) => {
   return moment.duration((end - start), `milliseconds`).format(`DD[D] HH[H] mm[M]`);
+};
+
+export const getDiffTimeHours = (start, end) => {
+  return moment.duration(end - start).asHours();
 };
 
 export const formatHours = (date) => {
@@ -60,4 +78,15 @@ export const getDayEvents = (events) => {
     }
   });
   return eventDays;
+};
+
+export const isDatesEqual = (dateA, dateB) => {
+  return (dateA === null && dateB === null) || moment(dateA).isSame(dateB, `day`);
+};
+
+export const isArraysEqual = (arrayA, arrayB) => {
+  [arrayA, arrayB] = [arrayA ? [...arrayA] : [], arrayB ? [...arrayB] : []];
+  return arrayA.length === arrayB.length && arrayA.sort(sortObjectsFunction).every((value, index) => {
+    return isObjectsEqual(value, arrayB.sort(sortObjectsFunction)[index]);
+  });
 };
