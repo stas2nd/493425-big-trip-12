@@ -1,20 +1,19 @@
-
+import {Mode, State} from "../const.js";
 import {render, replace, remove} from "../utils/render.js";
 import EditingEventView from "../view/editing-event.js";
 import EventView from "../view/event.js";
 import {UserAction, UpdateType} from "../const.js";
 import {isDatesEqual, isArraysEqual} from "../utils/event.js";
-
-const Mode = {
-  DEFAULT: `DEFAULT`,
-  EDITING: `EDITING`
-};
+import EventsModel from "../model/events.js";
 
 export default class Event {
-  constructor(dayContainer, changeData, changeMode) {
+  constructor(dayContainer, changeData, changeMode, api, cities, offers) {
     this._dayContainer = dayContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
+    this._api = api;
+    this._cities = cities;
+    this._offers = offers;
 
     this._eventComponent = null;
     this._eventEditComponent = null;
@@ -25,6 +24,8 @@ export default class Event {
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._replaceFormToCard = this._replaceFormToCard.bind(this);
+    this._handleChangeDestination = this._handleChangeDestination.bind(this);
+    this._handleChangeAction = this._handleChangeAction.bind(this);
   }
 
   init(event) {
@@ -32,6 +33,13 @@ export default class Event {
 
     const prevEventComponent = this._eventComponent;
     const prevEventEditComponent = this._eventEditComponent;
+
+    this._offers = [...this._offers].find((offer) => offer.type === event.action.name).offers.map((offer, index) => EventsModel.adaptOfferToClient(offer, false, index)).map((offer) => {
+      if (event.offers.map((of) => of.text).includes(offer.text)) {
+        offer.choosed = true;
+      }
+      return offer;
+    });
 
     this._eventComponent = new EventView(event);
     this._eventComponent.setEditClickHandler(this._handleEditClick);
@@ -48,6 +56,8 @@ export default class Event {
     if (this._mode === Mode.EDITING) {
       this._eventEditComponent = new EditingEventView(this._event);
       replace(this._eventEditComponent, prevEventEditComponent);
+      // replace(this._eventComponent, prevEventEditComponent);
+      // this._mode = Mode.DEFAULT;
     }
 
     remove(prevEventComponent);
@@ -62,11 +72,42 @@ export default class Event {
     }
   }
 
+  setViewState(state) {
+    const resetFormState = () => {
+      this._eventEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._eventEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true
+        });
+        break;
+      case State.DELETING:
+        this._eventEditComponent.updateData({
+          isDisabled: true,
+          isDeleting: true
+        });
+        break;
+      case State.ABORTING:
+        this._eventComponent.shake(resetFormState);
+        this._eventEditComponent.shake(resetFormState);
+        break;
+    }
+  }
+
   _replaceCardToForm() {
-    this._eventEditComponent = new EditingEventView(this._event);
+    this._eventEditComponent = new EditingEventView(this._cities, this._offers, this._event);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditComponent.setFormCloseHandler(this._replaceFormToCard);
     this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._eventEditComponent.setChangeDestinationHandler(this._handleChangeDestination);
+    this._eventEditComponent.setChangeActionHandler(this._handleChangeAction);
     replace(this._eventEditComponent, this._eventComponent);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
@@ -105,7 +146,6 @@ export default class Event {
         isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
         update
     );
-    this._replaceFormToCard();
   }
 
   _handleDeleteClick(event) {
@@ -114,6 +154,27 @@ export default class Event {
         UpdateType.MINOR,
         event
     );
+  }
+
+  _handleChangeDestination(destination) {
+    this._api.getDestinationByName(destination)
+      .then((city) => {
+        this._eventEditComponent.updateData({
+          waypoint: city.name,
+          description: city.description,
+          images: city.pictures
+        });
+      });
+  }
+
+  _handleChangeAction(action) {
+    this._api.getOffersByType(action.name)
+      .then((offers) => {
+        this._eventEditComponent.updateData({
+          action,
+          offers
+        });
+      });
   }
 
   destroy() {

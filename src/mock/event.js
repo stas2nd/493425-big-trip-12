@@ -22,7 +22,7 @@ const generateDescription = () => {
 };
 
 const getImages = () => {
-  return new Array(getRandomInteger(1, 5)).fill().map(() => `http://picsum.photos/248/152?r=${Math.random()}`);
+  return new Array(getRandomInteger(1, 5)).fill().map(() => ({src: `http://picsum.photos/248/152?r=${Math.random()}`, description: `img`}));
 };
 
 const generateDate = (first) => {

@@ -14,6 +14,7 @@ export default class Tabs {
     this._filterModel = filterModel;
 
     this._statsComponent = null;
+    this._currentState = null;
 
     this._menuComponent = new MenuView();
     this._handleChangeView = this._handleChangeView.bind(this);
@@ -31,6 +32,9 @@ export default class Tabs {
   }
 
   _handleChangeView(targetClick) {
+    if (this._currentState === targetClick) {
+      return;
+    }
     switch (targetClick) {
       case `ADD_NEW_EVENT`:
         this._menuComponent.setMenuItem(MenuItem.TABLE);
@@ -51,6 +55,7 @@ export default class Tabs {
         render(this._eventsContainer, this._statsComponent);
         break;
     }
+    this._currentState = targetClick;
   }
 
   _handleEventNewFormClose() {

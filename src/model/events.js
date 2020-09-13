@@ -1,3 +1,4 @@
+import {ACTIONS} from "../const.js";
 import Observer from "../utils/observer.js";
 
 export default class Events extends Observer {
@@ -6,8 +7,10 @@ export default class Events extends Observer {
     this._events = [];
   }
 
-  setEvents(events) {
-    this._events = [...events].map((event, index) => Object.assign(event, {id: index}));
+  setEvents(updateType, events) {
+    this._events = [...events];
+
+    this._notify(updateType);
   }
 
   getEvents() {
@@ -52,5 +55,57 @@ export default class Events extends Observer {
     ];
 
     this._notify(updateType);
+  }
+
+  static adaptOfferToClient(offer, choosed = false, index) {
+    return {
+      name: offer.title.split(` `).pop() + `-${index ? index : offer.price}`,
+      text: offer.title,
+      price: offer.price,
+      choosed
+    };
+  }
+
+  static adaptEventToClient(event) {
+    event = Object.assign({}, event);
+    return {
+      action: ACTIONS.find((action) => action.name === event.type),
+      cities: [],
+      waypoint: event.destination ? event.destination.name : null,
+      start: event.date_from !== null ? new Date(event.date_from) : event.date_from,
+      end: event.date_to !== null ? new Date(event.date_to) : event.date_to,
+      price: event.base_price,
+      offers: event.offers.map((offer, index) => (Events.adaptOfferToClient(offer, true, index))),
+      description: event.destination ? event.destination.description : null,
+      images: event.destination ? event.destination.pictures : null,
+      isFavorite: event.is_favorite,
+      id: event.id
+    };
+  }
+
+  static adaptOfferToServer(offer) {
+    return {
+      "title": offer.text,
+      "price": offer.price
+    };
+  }
+
+  static adaptEventToServer(event) {
+    event = Object.assign({}, event);
+    const offers = event.offers ? event.offers.filter((offer) => offer.choosed) : null;
+    return {
+      "base_price": +event.price,
+      "date_from": event.start instanceof Date ? event.start.toISOString() : null,
+      "date_to": event.end instanceof Date ? event.end.toISOString() : null,
+      "destination": {
+        "description": event.description,
+        "name": event.waypoint,
+        "pictures": event.images
+      },
+      "id": event.id,
+      "is_favorite": event.isFavorite,
+      "offers": offers ? offers.map((offer) => Events.adaptOfferToServer(offer)) : [],
+      "type": event.action.name
+    };
   }
 }
