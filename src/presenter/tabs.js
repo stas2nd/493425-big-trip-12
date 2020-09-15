@@ -60,5 +60,6 @@ export default class Tabs {
 
   _handleEventNewFormClose() {
     document.querySelector(`.trip-main__event-add-btn`).disabled = false;
+    this._currentState = null;
   }
 }

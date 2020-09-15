@@ -15,23 +15,16 @@ export default class Api {
 
   getOffers() {
     return this._load({url: `offers`})
-      .then(Api.toJSON);
-  }
-
-  getOffersByType(type) {
-    return this.getOffers()
-      .then((offers) => offers.find((offer) => offer.type === type))
-      .then((action) => action.offers.map((offer) => EventsModel.adaptOfferToClient(offer, false)));
+      .then(Api.toJSON)
+      .then((offers) => offers.map((type) => {
+        type.offers = type.offers.map((offer, index) => EventsModel.adaptOfferToClient(offer, false, index));
+        return type;
+      }));
   }
 
   getDestinations() {
     return this._load({url: `destinations`})
       .then(Api.toJSON);
-  }
-
-  getDestinationByName(name) {
-    return this.getDestinations()
-      .then((destinations) => destinations.find((destination) => destination.name === name));
   }
 
   updateEvent(event) {
@@ -58,7 +51,7 @@ export default class Api {
 
   deleteEvent(event) {
     return this._load({
-      url: `events/${event.id}`,
+      url: `points/${event.id}`,
       method: Method.DELETE
     });
   }

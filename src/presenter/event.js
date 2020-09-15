@@ -4,16 +4,13 @@ import EditingEventView from "../view/editing-event.js";
 import EventView from "../view/event.js";
 import {UserAction, UpdateType} from "../const.js";
 import {isDatesEqual, isArraysEqual} from "../utils/event.js";
-import EventsModel from "../model/events.js";
 
 export default class Event {
-  constructor(dayContainer, changeData, changeMode, api, cities, offers) {
+  constructor(dayContainer, changeData, changeMode, eventsModel) {
     this._dayContainer = dayContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
-    this._api = api;
-    this._cities = cities;
-    this._offers = offers;
+    this._eventsModel = eventsModel;
 
     this._eventComponent = null;
     this._eventEditComponent = null;
@@ -30,16 +27,19 @@ export default class Event {
 
   init(event) {
     this._event = event;
+    this._editEvent = Object.assign({}, this._event);
+
+    this._editEvent.offers = [...this._eventsModel.getOffers(this._event.action.name)]
+      .map((offer) => {
+        const newOffer = Object.assign({}, offer);
+        if (event.offers.map((of) => of.text).includes(offer.text)) {
+          newOffer.choosed = true;
+        }
+        return newOffer;
+      });
 
     const prevEventComponent = this._eventComponent;
     const prevEventEditComponent = this._eventEditComponent;
-
-    this._offers = [...this._offers].find((offer) => offer.type === event.action.name).offers.map((offer, index) => EventsModel.adaptOfferToClient(offer, false, index)).map((offer) => {
-      if (event.offers.map((of) => of.text).includes(offer.text)) {
-        offer.choosed = true;
-      }
-      return offer;
-    });
 
     this._eventComponent = new EventView(event);
     this._eventComponent.setEditClickHandler(this._handleEditClick);
@@ -54,10 +54,8 @@ export default class Event {
     }
 
     if (this._mode === Mode.EDITING) {
-      this._eventEditComponent = new EditingEventView(this._event);
+      this._eventEditComponent = new EditingEventView(this._editEvent);
       replace(this._eventEditComponent, prevEventEditComponent);
-      // replace(this._eventComponent, prevEventEditComponent);
-      // this._mode = Mode.DEFAULT;
     }
 
     remove(prevEventComponent);
@@ -102,7 +100,7 @@ export default class Event {
   }
 
   _replaceCardToForm() {
-    this._eventEditComponent = new EditingEventView(this._cities, this._offers, this._event);
+    this._eventEditComponent = new EditingEventView(this._eventsModel.getDestinations(), this._editEvent);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditComponent.setFormCloseHandler(this._replaceFormToCard);
     this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
@@ -157,24 +155,19 @@ export default class Event {
   }
 
   _handleChangeDestination(destination) {
-    this._api.getDestinationByName(destination)
-      .then((city) => {
-        this._eventEditComponent.updateData({
-          waypoint: city.name,
-          description: city.description,
-          images: city.pictures
-        });
-      });
+    const newCity = this._eventsModel.getDestinationInfo(destination);
+    this._eventEditComponent.updateData({
+      waypoint: newCity.name,
+      description: newCity.description,
+      images: newCity.pictures
+    });
   }
 
-  _handleChangeAction(action) {
-    this._api.getOffersByType(action.name)
-      .then((offers) => {
-        this._eventEditComponent.updateData({
-          action,
-          offers
-        });
-      });
+  _handleChangeAction(act) {
+    this._eventEditComponent.updateData({
+      action: act,
+      offers: this._eventsModel.getOffers(act.name)
+    });
   }
 
   destroy() {

@@ -34,7 +34,7 @@ export default class Trip {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    this._eventNewPresenter = new EventNewPresenter(this._tripContainer, this._handleViewAction, this._api);
+    this._eventNewPresenter = new EventNewPresenter(this._tripContainer, this._handleViewAction, this._eventsModel);
   }
 
   init() {
@@ -57,7 +57,7 @@ export default class Trip {
     this._currentSortType = SortType.EVENT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     remove(this._noEventsComponent);
-    this._eventNewPresenter.init(callback, this._cities, this._offers);
+    this._eventNewPresenter.init(callback);
   }
 
   _getEvents() {
@@ -177,7 +177,7 @@ export default class Trip {
   }
 
   _renderEvent(dayContainer, event) {
-    const eventPresenter = new EventPresenter(dayContainer, this._handleViewAction, this._handleModeChange, this._api, this._cities, this._offers);
+    const eventPresenter = new EventPresenter(dayContainer, this._handleViewAction, this._handleModeChange, this._eventsModel);
     eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }
@@ -222,15 +222,9 @@ export default class Trip {
       return;
     }
 
-    Promise.all([this._api.getDestinations(), this._api.getOffers()])
-      .then(([destinations, offers]) => {
-        this._cities = destinations.map((city) => city.name);
-        this._offers = offers;
-
-        this._renderSorting();
-        this._renderListDays();
-        this._renderEvents();
-      });
+    this._renderSorting();
+    this._renderListDays();
+    this._renderEvents();
   }
 
 }

@@ -1,12 +1,12 @@
 import EditingEventView from "../view/editing-event.js";
 import {remove, render, insertAfter} from "../utils/render.js";
-import {UserAction, UpdateType} from "../const.js";
+import {UserAction, UpdateType, BLANK_EVENT} from "../const.js";
 
 export default class EventNew {
-  constructor(eventsContainer, changeData, api) {
+  constructor(eventsContainer, changeData, eventsModel) {
     this._eventsContainer = eventsContainer;
     this._changeData = changeData;
-    this._api = api;
+    this._eventsModel = eventsModel;
 
     this._eventEditComponent = null;
     this._destroyCallback = null;
@@ -20,16 +20,16 @@ export default class EventNew {
     this._handleChangeAction = this._handleChangeAction.bind(this);
   }
 
-  init(callback, cities, offers) {
+  init(callback) {
     this._destroyCallback = callback;
-    this._cities = cities;
-    this._offers = offers;
+    this._cities = this._eventsModel.getDestinations();
+    this._offers = this._eventsModel.getOffers(BLANK_EVENT.action.name).concat();
 
     if (this._eventEditComponent !== null) {
       return;
     }
 
-    this._eventEditComponent = new EditingEventView(this._cities, this._offers);
+    this._eventEditComponent = new EditingEventView(this._cities);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
     this._eventEditComponent.setFormCloseHandler(this._handleDeleteClick);
@@ -61,7 +61,7 @@ export default class EventNew {
   }
 
   setSaving() {
-    this._taskEditComponent.updateData({
+    this._eventEditComponent.updateData({
       isDisabled: true,
       isSaving: true
     });
@@ -101,23 +101,18 @@ export default class EventNew {
   }
 
   _handleChangeDestination(destination) {
-    this._api.getDestinationByName(destination)
-      .then((city) => {
-        this._eventEditComponent.updateData({
-          waypoint: city.name,
-          description: city.description,
-          images: city.pictures
-        });
-      });
+    const newCity = this._eventsModel.getDestinationInfo(destination);
+    this._eventEditComponent.updateData({
+      waypoint: newCity.name,
+      description: newCity.description,
+      images: newCity.pictures
+    });
   }
 
   _handleChangeAction(action) {
-    this._api.getOffersByType(action.name)
-      .then((offers) => {
-        this._eventEditComponent.updateData({
-          action,
-          offers
-        });
-      });
+    this._eventEditComponent.updateData({
+      action,
+      offers: this._eventsModel.getOffers(action.name)
+    });
   }
 }

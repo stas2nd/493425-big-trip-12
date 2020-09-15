@@ -9,11 +9,10 @@ import flatpickr from "flatpickr";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 export default class EditingEvent extends SmartView {
-  constructor(destinations, offers, event = BLANK_EVENT) {
+  constructor(destinations, event = BLANK_EVENT) {
     super();
     this._data = EditingEvent.parseEventToData(event);
     this._destinations = destinations;
-    this._offers = offers;
 
     this._startDatepicker = null;
     this._endDatepicker = null;
@@ -45,7 +44,7 @@ export default class EditingEvent extends SmartView {
     this._start = this._data.start;
     this._end = this._data.end;
 
-    this._offersTemplate = new EditingEventOffersView(this._offers, this._data.id).getTemplate();
+    this._offersTemplate = new EditingEventOffersView(this._data.offers, this._data.id).getTemplate();
     this._destination = new EditingEventDestinationView(this._data.description, this._data.images).getTemplate();
 
     const isSubmitDisabled = !this._destinations.includes(this._data.waypoint) || !this._validatedPrice;

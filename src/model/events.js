@@ -7,14 +7,27 @@ export default class Events extends Observer {
     this._events = [];
   }
 
-  setEvents(updateType, events) {
+  setData(updateType, events = [], offers = [], destinations = []) {
     this._events = [...events];
-
+    this._offers = [...offers];
+    this._destinations = [...destinations];
     this._notify(updateType);
   }
 
   getEvents() {
     return this._events;
+  }
+
+  getOffers(type) {
+    return [...this._offers].find((offer) => offer.type === type).offers;
+  }
+
+  getDestinations() {
+    return [...this._destinations].map((city) => city.name);
+  }
+
+  getDestinationInfo(destination) {
+    return [...this._destinations].find((city) => city.name === destination);
   }
 
   updateEvent(updateType, update) {
@@ -57,7 +70,7 @@ export default class Events extends Observer {
     this._notify(updateType);
   }
 
-  static adaptOfferToClient(offer, choosed = false, index) {
+  static adaptOfferToClient(offer, choosed, index) {
     return {
       name: offer.title.split(` `).pop() + `-${index ? index : offer.price}`,
       text: offer.title,
