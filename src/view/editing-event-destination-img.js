@@ -1,14 +1,15 @@
 import AbstractView from "./abstract.js";
 
 export default class EditingEventDestinationImg extends AbstractView {
-  constructor(img) {
+  constructor({src, description}) {
     super();
-    this._img = img;
+    this._src = src;
+    this._alt = description;
   }
 
   getTemplate() {
     return (
-      this._img ? `<img class="event__photo" src="${this._img}" alt="Event photo">` : ``
+      this._src ? `<img class="event__photo" src="${this._src}" alt="${this._alt}">` : ``
     );
   }
 }

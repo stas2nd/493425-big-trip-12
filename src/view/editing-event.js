@@ -1,18 +1,19 @@
-import {getRandomInteger} from "../utils/common.js";
 import EditingEventOptionsView from "./editing-event-options.js";
 import EditingEventDestinationItemView from "./editing-event-destination-item.js";
 import EditingEventOffersView from "./editing-event-offers.js";
 import EditingEventDestinationView from "./editing-event-destination.js";
 import SmartView from "./smart.js";
-import {ACTIONS, KIND_OFFER, OFFERS, DESCRIPTION, BLANK_EVENT} from "../const.js";
+import {ACTIONS, BLANK_EVENT} from "../const.js";
 import flatpickr from "flatpickr";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 export default class EditingEvent extends SmartView {
-  constructor(event = BLANK_EVENT) {
+  constructor(destinations, event = BLANK_EVENT) {
     super();
-    this._data = event;
+    this._data = EditingEvent.parseEventToData(event);
+    this._destinations = destinations;
+
     this._startDatepicker = null;
     this._endDatepicker = null;
 
@@ -39,14 +40,15 @@ export default class EditingEvent extends SmartView {
     this._opts = new EditingEventOptionsView(this._data.action, this._data.id).getTemplate();
     this._optText = this._data.action.name.charAt(0).toUpperCase() + this._data.action.name.slice(1);
     this._pretext = this._data.action.type === `transport` ? `to` : `in`;
-    this._cities = this._makeTemplateFromArrayClass(EditingEventDestinationItemView, this._data.cities);
+    this._cities = this._makeTemplateFromArrayClass(EditingEventDestinationItemView, this._destinations);
     this._start = this._data.start;
     this._end = this._data.end;
 
-    this._offers = new EditingEventOffersView(this._data.offers, this._data.id).getTemplate();
+    this._offersTemplate = new EditingEventOffersView(this._data.offers, this._data.id).getTemplate();
     this._destination = new EditingEventDestinationView(this._data.description, this._data.images).getTemplate();
 
-    const isSubmitDisabled = !this._data.cities.includes(this._data.waypoint) || !this._validatedPrice;
+    const isSubmitDisabled = !this._destinations.includes(this._data.waypoint) || !this._validatedPrice;
+    const deleteText = this._data.isDeleting ? `Deleting...` : `Delete`;
 
     return (
       `<form class="trip-events__item  event event--edit" action="#" method="post">
@@ -56,7 +58,7 @@ export default class EditingEvent extends SmartView {
                 <span class="visually-hidden">Choose event type</span>
                 <img class="event__type-icon" width="17" height="17" src="img/icons/${this._data.action.name}.png" alt="Event type icon">
               </label>
-              <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${this._data.id}" type="checkbox">
+              <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="checkbox">
               ${this._opts}
             </div>
 
@@ -64,7 +66,7 @@ export default class EditingEvent extends SmartView {
               <label class="event__label  event__type-output" for="event-destination-${this._data.id}">
                 ${this._optText} ${this._pretext}
               </label>
-              <input class="event__input  event__input--destination" id="event-destination-${this._data.id}" type="text" name="event-destination" value="${this._data.waypoint ? this._data.waypoint : ``}" list="destination-list-${this._data.id}">
+              <input class="event__input  event__input--destination" id="event-destination-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-destination" value="${this._data.waypoint ? this._data.waypoint : ``}" list="destination-list-${this._data.id}">
               <datalist id="destination-list-${this._data.id}">
                 ${this._cities}
               </datalist>
@@ -74,12 +76,12 @@ export default class EditingEvent extends SmartView {
               <label class="visually-hidden" for="event-start-time-${this._data.id}">
                 From
               </label>
-              <input class="event__input  event__input--time" id="event-start-time-${this._data.id}" type="text" name="event-start-time" value="${this._start ? this._start : ``}">
+              <input class="event__input  event__input--time" id="event-start-time-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-start-time" value="${this._start ? this._start : ``}">
               &mdash;
               <label class="visually-hidden" for="event-end-time-${this._data.id}">
                 To
               </label>
-              <input class="event__input  event__input--time" id="event-end-time-${this._data.id}" type="text" name="event-end-time" value="${this._end ? this._end : ``}">
+              <input class="event__input  event__input--time" id="event-end-time-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-end-time" value="${this._end ? this._end : ``}">
             </div>
 
             <div class="event__field-group  event__field-group--price">
@@ -87,11 +89,15 @@ export default class EditingEvent extends SmartView {
                 <span class="visually-hidden">Price</span>
                 &euro;
               </label>
-              <input class="event__input  event__input--price" id="event-price-${this._data.id}" type="text" name="event-price" value="${this._data.price ? this._data.price : ``}">
+              <input class="event__input  event__input--price" id="event-price-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-price" value="${this._data.price ? this._data.price : ``}">
             </div>
 
-            <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>
-            <button class="event__reset-btn" type="reset">${this._data.id === `new` ? `Cancel` : `Delete`}</button>
+            <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled || this._data.isDisabled ? `disabled` : ``}>
+              ${this._data.isSaving ? `Saving...` : `Save`}
+            </button>
+            <button class="event__reset-btn" type="reset">
+              ${this._data.id === `new` ? `Cancel` : deleteText}
+            </button>
 
             <input id="event-favorite-${this._data.id}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${this._data.isFavorite ? `checked` : ``}>
             <label class="event__favorite-btn" for="event-favorite-${this._data.id}">
@@ -106,7 +112,7 @@ export default class EditingEvent extends SmartView {
           </header>
           ${this._data.offers || this._destination ?
         `<section class="event__details">
-          ${this._data.offers ? this._offers : ``}
+          ${this._data.offers ? this._offersTemplate : ``}
           ${this._destination}
         </section>` : ``}
         </form>`
@@ -133,6 +139,8 @@ export default class EditingEvent extends SmartView {
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setFormCloseHandler(this._callback.formClose);
     this.setDeleteClickHandler(this._callback.deleteClick);
+    this.setChangeDestinationHandler(this._callback.destinationChange);
+    this.setChangeActionHandler(this._callback.actionChange);
   }
 
   _setStartDatepicker() {
@@ -222,10 +230,7 @@ export default class EditingEvent extends SmartView {
       return;
     }
     const newType = ACTIONS.find((action) => action.name === typeName);
-    this.updateData({
-      action: newType,
-      offers: EditingEvent.getOffers(newType)
-    });
+    this._callback.actionChange(newType);
   }
 
   _favoriteClickHandler(evt) {
@@ -238,11 +243,7 @@ export default class EditingEvent extends SmartView {
   _destinationBlurHandler(evt) {
     evt.preventDefault();
     if (this._data.waypoint !== evt.target.value) {
-      this.updateData({
-        waypoint: evt.target.value,
-        description: this._data.cities.includes(evt.target.value) ? EditingEvent.getDescription() : null,
-        images: this._data.cities.includes(evt.target.value) ? EditingEvent.getImages() : null
-      });
+      this._callback.destinationChange(evt.target.value);
     }
   }
 
@@ -275,7 +276,7 @@ export default class EditingEvent extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(this._data);
+    this._callback.formSubmit(EditingEvent.parseDataToEvent(this._data));
   }
 
   setFormSubmitHandler(callback) {
@@ -292,7 +293,7 @@ export default class EditingEvent extends SmartView {
 
   _formDeleteClickHandler(evt) {
     evt.preventDefault();
-    this._callback.deleteClick(this._data);
+    this._callback.deleteClick(EditingEvent.parseDataToEvent(this._data));
   }
 
   setDeleteClickHandler(callback) {
@@ -324,23 +325,34 @@ export default class EditingEvent extends SmartView {
     }
   }
 
-  static getOffers(action) {
-    if (action.type === `transport` && Object.keys(KIND_OFFER).includes(action.name)) {
-      return KIND_OFFER[action.name].map((offer) => {
-        const offerItem = OFFERS.find((item) => item.name === offer);
-        offerItem.price = getRandomInteger(5, 100);
-        offerItem.choosed = false;
-        return offerItem;
-      });
-    }
-    return null;
+  setChangeDestinationHandler(callback) {
+    this._callback.destinationChange = callback;
   }
 
-  static getDescription() {
-    return DESCRIPTION.repeat(getRandomInteger(1, 5));
+  setChangeActionHandler(callback) {
+    this._callback.actionChange = callback;
   }
 
-  static getImages() {
-    return new Array(getRandomInteger(1, 5)).fill().map(() => `http://picsum.photos/248/152?r=${Math.random()}`);
+  static parseEventToData(event) {
+    return Object.assign(
+        {},
+        event,
+        {
+          isDisabled: false,
+          isSaving: false,
+          isDeleting: false
+        }
+    );
   }
+
+  static parseDataToEvent(data) {
+    data = Object.assign({}, data);
+
+    delete data.isDisabled;
+    delete data.isSaving;
+    delete data.isDeleting;
+
+    return data;
+  }
+
 }

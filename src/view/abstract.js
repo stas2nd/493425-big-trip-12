@@ -1,3 +1,4 @@
+import {SHAKE_ANIMATION_TIMEOUT} from "../const.js";
 import {createElement} from "../utils/render.js";
 
 export default class Abstract {
@@ -30,6 +31,14 @@ export default class Abstract {
     return array ? array.reduce((accumulator, currentValue, index) => {
       return accumulator + new CL(currentValue, [...rest, {arrayIndex: index}]).getTemplate();
     }, ``) : ``;
+  }
+
+  shake(callback) {
+    this.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this.getElement().style.animation = ``;
+      callback();
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
 }
