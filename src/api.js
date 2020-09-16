@@ -1,4 +1,4 @@
-import {Method, SuccessHTTPStatusRange} from "./const.js";
+import {SuccessHTTPStatusRange} from "./const.js";
 import EventsModel from "./model/events.js";
 
 export default class Api {
@@ -30,7 +30,7 @@ export default class Api {
   updateEvent(event) {
     return this._load({
       url: `points/${event.id}`,
-      method: Method.PUT,
+      method: `PUT`,
       body: JSON.stringify(EventsModel.adaptEventToServer(event)),
       headers: new Headers({"Content-Type": `application/json`})
     })
@@ -41,7 +41,7 @@ export default class Api {
   addEvent(event) {
     return this._load({
       url: `points`,
-      method: Method.POST,
+      method: `POST`,
       body: JSON.stringify(EventsModel.adaptEventToServer(event)),
       headers: new Headers({"Content-Type": `application/json`})
     })
@@ -52,13 +52,13 @@ export default class Api {
   deleteEvent(event) {
     return this._load({
       url: `points/${event.id}`,
-      method: Method.DELETE
+      method: `DELETE`
     });
   }
 
   _load({
     url,
-    method = Method.GET,
+    method = `GET`,
     body = null,
     headers = new Headers()
   }) {

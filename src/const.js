@@ -196,23 +196,12 @@ export const TAB_ARRAY = [
     text: `Stats`
   }
 ];
-export const Method = {
-  GET: `GET`,
-  PUT: `PUT`,
-  POST: `POST`,
-  DELETE: `DELETE`
-};
-
 export const SuccessHTTPStatusRange = {
   MIN: 200,
   MAX: 299
 };
 export const AUTHORIZATION = `Basic kljadfh87434093hfou4w867h439g`;
 export const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
-export const Mode = {
-  DEFAULT: `DEFAULT`,
-  EDITING: `EDITING`
-};
 export const State = {
   SAVING: `SAVING`,
   DELETING: `DELETING`,

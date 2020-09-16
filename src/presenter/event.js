@@ -1,4 +1,4 @@
-import {Mode, State} from "../const.js";
+import {State} from "../const.js";
 import {render, replace, remove} from "../utils/render.js";
 import EditingEventView from "../view/editing-event.js";
 import EventView from "../view/event.js";
@@ -14,7 +14,7 @@ export default class Event {
 
     this._eventComponent = null;
     this._eventEditComponent = null;
-    this._mode = Mode.DEFAULT;
+    this._mode = `DEFAULT`;
 
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
@@ -49,11 +49,11 @@ export default class Event {
       return;
     }
 
-    if (this._mode === Mode.DEFAULT) {
+    if (this._mode === `DEFAULT`) {
       replace(this._eventComponent, prevEventComponent);
     }
 
-    if (this._mode === Mode.EDITING) {
+    if (this._mode === `EDITING`) {
       this._eventEditComponent = new EditingEventView(this._editEvent);
       replace(this._eventEditComponent, prevEventEditComponent);
     }
@@ -65,7 +65,7 @@ export default class Event {
   }
 
   resetView() {
-    if (this._mode !== Mode.DEFAULT) {
+    if (this._mode !== `DEFAULT`) {
       this._replaceFormToCard();
     }
   }
@@ -80,7 +80,7 @@ export default class Event {
     };
 
     switch (state) {
-      case State.SAVING:
+      case  State.SAVING:
         this._eventEditComponent.updateData({
           isDisabled: true,
           isSaving: true
@@ -109,7 +109,7 @@ export default class Event {
     replace(this._eventEditComponent, this._eventComponent);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
-    this._mode = Mode.EDITING;
+    this._mode = `EDITING`;
   }
 
   _replaceFormToCard() {
@@ -118,7 +118,7 @@ export default class Event {
     this._eventEditComponent.removeFormCloseHandler(this._replaceFormToCard);
     remove(this._eventEditComponent);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
-    this._mode = Mode.DEFAULT;
+    this._mode = `DEFAULT`;
   }
 
   _escKeyDownHandler(evt) {
