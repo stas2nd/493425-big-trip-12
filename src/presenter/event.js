@@ -80,7 +80,7 @@ export default class Event {
     };
 
     switch (state) {
-      case  State.SAVING:
+      case State.SAVING:
         this._eventEditComponent.updateData({
           isDisabled: true,
           isSaving: true
