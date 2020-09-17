@@ -23,7 +23,8 @@ export default class EditingEvent extends SmartView {
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._formCloseHandler = this._formCloseHandler.bind(this);
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
-    this._destinationBlurHandler = this._destinationBlurHandler.bind(this);
+    this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
+    this._destinationInputHandler = this._destinationInputHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._priceBlurHandler = this._priceBlurHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
@@ -193,7 +194,10 @@ export default class EditingEvent extends SmartView {
       .addEventListener(`click`, this._eventTypeChangeHandler);
     this.getElement()
       .querySelector(`.event__input--destination`)
-      .addEventListener(`blur`, this._destinationBlurHandler);
+      .addEventListener(`change`, this._destinationChangeHandler);
+    this.getElement()
+      .querySelector(`.event__input--destination`)
+      .addEventListener(`input`, this._destinationInputHandler);
     this.getElement()
       .querySelector(`.event__input--price`)
       .addEventListener(`input`, this._priceInputHandler);
@@ -240,11 +244,15 @@ export default class EditingEvent extends SmartView {
     });
   }
 
-  _destinationBlurHandler(evt) {
+  _destinationChangeHandler(evt) {
     evt.preventDefault();
-    if (this._data.waypoint !== evt.target.value) {
+    if (this._data.waypoint !== evt.target.value && this._destinations.includes(evt.target.value)) {
       this._callback.destinationChange(evt.target.value);
     }
+  }
+
+  _destinationInputHandler(evt) {
+    this.getElement().querySelector(`.event__save-btn`).disabled = !this._destinations.includes(evt.target.value);
   }
 
   _priceInputHandler(evt) {
@@ -257,7 +265,7 @@ export default class EditingEvent extends SmartView {
     if (this._data.price !== evt.target.value) {
       this.updateData({
         price: evt.target.value
-      });
+      }, true);
     }
   }
 
