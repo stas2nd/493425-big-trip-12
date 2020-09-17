@@ -102,11 +102,13 @@ export default class Event {
   _replaceCardToForm() {
     this._eventEditComponent = new EditingEventView(this._eventsModel.getDestinations(), this._editEvent);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    // 1. Устанавливаем колбэк на закрытие формы
     this._eventEditComponent.setFormCloseHandler(this._replaceFormToCard);
     this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
     this._eventEditComponent.setChangeDestinationHandler(this._handleChangeDestination);
     this._eventEditComponent.setChangeActionHandler(this._handleChangeAction);
     replace(this._eventEditComponent, this._eventComponent);
+    // 1. Устанавливаем колбэк на esc клавишу для закрытия формы/замена на обычную точку маршрута
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
     this._mode = `EDITING`;

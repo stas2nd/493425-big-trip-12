@@ -316,6 +316,7 @@ export default class EditingEvent extends SmartView {
     }
   }
 
+  // 1. Обработчик на закрытие формы
   _formCloseHandler(evt) {
     evt.preventDefault();
     this._callback.formClose();
