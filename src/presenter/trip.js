@@ -64,15 +64,18 @@ export default class Trip {
     const filterType = this._filterModel.getFilter();
     const filtredTasks = filter[filterType](this._eventsModel.getEvents());
 
+    // 5. Получаемые события фильтруются согласно выбранной сортировки
     const eventsToSortingMap = {
       event: (events) => getDayEvents(events),
       time: (events) => [{
+        // 5. В режиме сортировки точки маршрута не разбиваются по дням
         day: null,
         events: [...events].sort((a, b) => {
           return (b.end - b.start) - (a.end - a.start);
         })
       }],
       price: (events) => [{
+        // 5. В режиме сортировки точки маршрута не разбиваются по дням
         day: null,
         events: [...events].sort((a, b) => {
           return (b.price + getOffersPrice(b)) - (a.price + getOffersPrice(a));
@@ -147,6 +150,8 @@ export default class Trip {
 
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
+      // 4. Список перерисовывается только в случае,
+      // если выбранная пользователем сортировка отличается от текущей
       return;
     }
 
@@ -155,9 +160,11 @@ export default class Trip {
     this._renderTrip();
   }
 
+  // 2. Создание и отрисовка компонента Сортировки
   _renderSorting() {
     this._sortingComponent = new SortingView(this._currentSortType);
     render(this._tripContainer, this._sortingComponent);
+    // 3. Установка колбэка на изменение активного типа сортировки
     this._sortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
