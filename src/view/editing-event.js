@@ -242,7 +242,8 @@ export default class EditingEvent extends SmartView {
 
   _destinationChangeHandler(evt) {
     evt.preventDefault();
-    if (this._data.waypoint !== evt.target.value && this._destinations.includes(evt.target.value)) {
+    this.getElement().querySelector(`.event__save-btn`).disabled = !this._destinations.includes(evt.target.value);
+    if (this._data.waypoint !== evt.target.value) {
       this._callback.destinationChange(evt.target.value);
     }
   }
