@@ -1,6 +1,7 @@
 const path = require('path');
+// 6. Специальный плагин, который удалит при сборке ненужные локали
 const MomentLocalesPlugin = require(`moment-locales-webpack-plugin`);
-
+// 2. Установка пакетов style-loader и css-loader
 module.exports = {
   mode: 'development',
   entry: './src/main.js',

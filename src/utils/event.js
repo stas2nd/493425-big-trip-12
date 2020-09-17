@@ -50,6 +50,7 @@ export const formatEventDate = (date) => {
   return date instanceof Date ? moment(date).format(`D MMMM`) : ``;
 };
 
+// 8. Продолжительность каждой точки в заданном формате с помощью библиотеки moment
 export const getDiffTime = (start, end) => {
   return moment.duration((end - start), `milliseconds`).format(`DD[D] HH[H] mm[M]`);
 };
