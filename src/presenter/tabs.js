@@ -24,6 +24,7 @@ export default class Tabs {
   }
 
   init() {
+    // 4. Фильтры на графики и диаграммы никак не влияют, нет отслеживания изменений this._filterModel
     render(this._headerContainer, this._menuComponent);
     document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
       evt.preventDefault();
@@ -38,6 +39,7 @@ export default class Tabs {
     switch (targetClick) {
       case `ADD_NEW_EVENT`:
         this._menuComponent.setMenuItem(MenuItem.TABLE);
+        // 4. Удаление компонента статистики
         remove(this._statsComponent);
         this._tripPresenter.destroy();
         this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
@@ -46,11 +48,15 @@ export default class Tabs {
         document.querySelector(`.trip-main__event-add-btn`).disabled = true;
         break;
       case MenuItem.TABLE:
+        // 5. При переключении на экран статистики и обратно сбрасывается выбранная сортировка
         this._tripPresenter.init();
+        // 4. Удаление компонента статистики
         remove(this._statsComponent);
         break;
       case MenuItem.STATS:
+        // 5. В destroy сбрасывается выбранная сортировка
         this._tripPresenter.destroy();
+        // 4. Отрисовка компонента статистики
         this._statsComponent = new StatsView(this._eventsModel.getEvents());
         render(this._eventsContainer, this._statsComponent);
         break;
