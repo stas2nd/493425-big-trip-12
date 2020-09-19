@@ -14,6 +14,7 @@ export default class Event extends AbstractView {
   }
 
   getTemplate() {
+    // 8. Продолжительность каждой точки в заданном формате с помощью библиотеки moment в функции getDiffTime
     return (
       `<li class="trip-events__item">
         <div class="event">

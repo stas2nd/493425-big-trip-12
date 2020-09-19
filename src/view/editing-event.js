@@ -151,10 +151,12 @@ export default class EditingEvent extends SmartView {
     }
 
     const inputName = `event-start-time`;
+    // 4. Выбор даты в форме редактирования осуществляется с помощью flatpickr
     this._startDatepicker = flatpickr(
         this.getElement().querySelector(`[name=${inputName}]`),
         {
           enableTime: true,
+          // 4. Формат даты
           dateFormat: `d/m/y H:i`,
           onChange: this._startDateChangeHandler
         }
@@ -173,9 +175,11 @@ export default class EditingEvent extends SmartView {
     const inputName = `event-end-time`;
 
     this._endDatepicker = flatpickr(
+    // 4. Выбор даты в форме редактирования осуществляется с помощью flatpickr
         this.getElement().querySelector(`[name=${inputName}]`),
         {
           enableTime: true,
+          // 4. Формат даты
           dateFormat: `d/m/y H:i`,
           onChange: this._endDateChangeHandler
         }
