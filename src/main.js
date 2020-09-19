@@ -5,7 +5,7 @@ import InfoPresenter from "./presenter/info.js";
 import EventsModel from "./model/events.js";
 import FilterModel from "./model/filters.js";
 import TabsPresenter from "./presenter/tabs.js";
-import Api from "./api.js";
+import Api from "./api/index.js";
 
 const api = new Api(END_POINT, AUTHORIZATION);
 

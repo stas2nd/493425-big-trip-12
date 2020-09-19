@@ -1,5 +1,5 @@
-import {SuccessHTTPStatusRange} from "./const.js";
-import EventsModel from "./model/events.js";
+import {SuccessHTTPStatusRange} from "../const.js";
+import EventsModel from "../model/events.js";
 
 export default class Api {
   constructor(endPoint, authorization) {
