@@ -217,6 +217,7 @@ export default class Trip {
       this._renderLoading();
       return;
     }
+    // 2. Приглашение добавить первую точку маршрута, если таковые отсутствуют
     if (!this._eventsModel.getEvents().length) {
       this._renderNoEvents();
       return;
