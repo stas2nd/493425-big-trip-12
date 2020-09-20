@@ -1,3 +1,4 @@
+import he from "he";
 import EventOfferView from "./event-offer.js";
 import {formatHours, getDiffTime} from "../utils/event";
 import AbstractView from "./abstract.js";
@@ -21,7 +22,7 @@ export default class Event extends AbstractView {
           <div class="event__type">
             <img class="event__type-icon" width="42" height="42" src="img/icons/${this._event.action.name}.png" alt="Event type icon">
           </div>
-          <h3 class="event__title">${this._optText} ${this._pretext} ${this._event.waypoint}</h3>
+          <h3 class="event__title">${this._optText} ${this._pretext} ${he.encode(this._event.waypoint)}</h3>
 
           <div class="event__schedule">
             <p class="event__time">
@@ -33,7 +34,7 @@ export default class Event extends AbstractView {
           </div>
 
           <p class="event__price">
-            &euro;&nbsp;<span class="event__price-value">${this._event.price}</span>
+            &euro;&nbsp;<span class="event__price-value">${he.encode(this._event.price + ``)}</span>
           </p>
           ${this._event.offers ?
         `<h4 class="visually-hidden">Offers:</h4>

@@ -1,3 +1,4 @@
+import he from "he";
 import EditingEventOptionsView from "./editing-event-options.js";
 import EditingEventDestinationItemView from "./editing-event-destination-item.js";
 import EditingEventOffersView from "./editing-event-offers.js";
@@ -67,7 +68,7 @@ export default class EditingEvent extends SmartView {
               <label class="event__label  event__type-output" for="event-destination-${this._data.id}">
                 ${this._optText} ${this._pretext}
               </label>
-              <input class="event__input  event__input--destination" id="event-destination-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-destination" value="${this._data.waypoint ? this._data.waypoint : ``}" list="destination-list-${this._data.id}">
+              <input class="event__input  event__input--destination" id="event-destination-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-destination" value="${this._data.waypoint ? he.encode(this._data.waypoint) : ``}" list="destination-list-${this._data.id}">
               <datalist id="destination-list-${this._data.id}">
                 ${this._cities}
               </datalist>
@@ -90,7 +91,7 @@ export default class EditingEvent extends SmartView {
                 <span class="visually-hidden">Price</span>
                 &euro;
               </label>
-              <input class="event__input  event__input--price" id="event-price-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-price" value="${this._data.price !== undefined && this._data.price !== null ? this._data.price : ``}">
+              <input class="event__input  event__input--price" id="event-price-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-price" value="${this._data.price !== undefined && this._data.price !== null ? he.encode(this._data.price + ``) : ``}">
             </div>
 
             <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled || this._data.isDisabled ? `disabled` : ``}>
