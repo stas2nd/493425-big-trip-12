@@ -39,8 +39,8 @@ export const isFutureEvent = (date) => {
 
 export const getOffersPrice = (event) => {
   if (event.offers) {
-    return event.offers.filter((offer) => offer.checked).reduce((accumulator, currentValue) => {
-      return accumulator + currentValue.price;
+    return event.offers.filter((offer) => offer.choosed).reduce((accumulator, currentValue) => {
+      return accumulator + Number(currentValue.price);
     }, 0);
   }
   return 0;

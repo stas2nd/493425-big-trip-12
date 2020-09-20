@@ -1,5 +1,5 @@
-import {SuccessHTTPStatusRange} from "./const.js";
-import EventsModel from "./model/events.js";
+import {SuccessHTTPStatusRange} from "../const.js";
+import EventsModel from "../model/events.js";
 
 export default class Api {
   constructor(endPoint, authorization) {
@@ -54,6 +54,16 @@ export default class Api {
       url: `points/${event.id}`,
       method: `DELETE`
     });
+  }
+
+  sync(data) {
+    return this._load({
+      url: `points/sync`,
+      method: `POST`,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON);
   }
 
   _load({
