@@ -143,6 +143,7 @@ export default class EditingEvent extends SmartView {
     this.setDeleteClickHandler(this._callback.deleteClick);
     this.setChangeDestinationHandler(this._callback.destinationChange);
     this.setChangeActionHandler(this._callback.actionChange);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
   }
 
   _setStartDatepicker() {
@@ -209,9 +210,6 @@ export default class EditingEvent extends SmartView {
     this.getElement()
       .querySelector(`.event__input--price`)
       .addEventListener(`blur`, this._priceBlurHandler);
-    this.getElement()
-      .querySelector(`.event__favorite-btn`)
-      .addEventListener(`click`, this._favoriteClickHandler);
     if (this._data.offers && this._data.offers.length) {
       this.getElement()
         .querySelector(`.event__available-offers`)
@@ -240,13 +238,6 @@ export default class EditingEvent extends SmartView {
     }
     const newType = ACTIONS.find((action) => action.name === typeName);
     this._callback.actionChange(newType);
-  }
-
-  _favoriteClickHandler(evt) {
-    evt.preventDefault();
-    this.updateData({
-      isFavorite: !this._data.isFavorite
-    });
   }
 
   _destinationChangeHandler(evt) {
@@ -337,6 +328,21 @@ export default class EditingEvent extends SmartView {
       this.getElement().querySelector(`.event__rollup-btn`).removeEventListener(`click`, this._formCloseHandler);
       delete this._callback.formClose;
     }
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      isFavorite: !this._data.isFavorite
+    });
+    this._callback.favoriteClick(EditingEvent.parseDataToEvent(this._data));
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement()
+      .querySelector(`.event__favorite-btn`)
+      .addEventListener(`click`, this._favoriteClickHandler);
   }
 
   setChangeDestinationHandler(callback) {

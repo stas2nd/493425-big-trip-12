@@ -18,6 +18,7 @@ export default class Event {
 
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._replaceFormToCard = this._replaceFormToCard.bind(this);
@@ -54,7 +55,7 @@ export default class Event {
     }
 
     if (this._mode === `EDITING`) {
-      this._eventEditComponent = new EditingEventView(this._editEvent);
+      this._eventEditComponent = new EditingEventView(this._eventsModel.getDestinations(), this._editEvent);
       replace(this._eventEditComponent, prevEventEditComponent);
     }
 
@@ -102,6 +103,7 @@ export default class Event {
   _replaceCardToForm() {
     this._eventEditComponent = new EditingEventView(this._eventsModel.getDestinations(), this._editEvent);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     // 1. Устанавливаем колбэк на закрытие формы
     this._eventEditComponent.setFormCloseHandler(this._replaceFormToCard);
     this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
@@ -144,6 +146,14 @@ export default class Event {
     this._changeData(
         UserAction.UPDATE_EVENT,
         isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+        update
+    );
+  }
+
+  _handleFavoriteClick(update) {
+    this._changeData(
+        UserAction.UPDATE_EVENT,
+        UpdateType.PATCH,
         update
     );
   }
