@@ -1,4 +1,4 @@
-import {END_POINT, AUTHORIZATION, UpdateType, STORE_NAME} from "./const.js";
+import {END_POINT, AUTHORIZATION, STORE_NAME, UpdateType} from "./const.js";
 import TripPresenter from "./presenter/trip.js";
 import FilterPresenter from "./presenter/filter.js";
 import InfoPresenter from "./presenter/info.js";
@@ -8,6 +8,12 @@ import TabsPresenter from "./presenter/tabs.js";
 import Api from "./api/index.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
+
+const siteHeaderElement = document.querySelector(`.page-header`);
+const siteHeaderMainElement = siteHeaderElement.querySelector(`.trip-main`);
+const siteHeaderControlsElement = siteHeaderMainElement.querySelector(`.trip-controls`);
+const siteMainElement = document.querySelector(`.page-main`);
+const siteEventsElement = siteMainElement.querySelector(`.trip-events`);
 
 const api = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
@@ -20,12 +26,6 @@ Promise.all([apiWithProvider.getEvents(), apiWithProvider.getOffers(), apiWithPr
   .then(([evs, offers, destinations]) => {
     eventsModel.setData(UpdateType.INIT, evs, offers, destinations);
   });
-
-const siteHeaderElement = document.querySelector(`.page-header`);
-const siteMainElement = document.querySelector(`.page-main`);
-const siteHeaderMainElement = siteHeaderElement.querySelector(`.trip-main`);
-const siteEventsElement = siteMainElement.querySelector(`.trip-events`);
-const siteHeaderControlsElement = siteHeaderMainElement.querySelector(`.trip-controls`);
 
 const infoPresenter = new InfoPresenter(siteHeaderMainElement, eventsModel);
 const tripPresenter = new TripPresenter(siteEventsElement, eventsModel, filterModel, apiWithProvider);
@@ -40,10 +40,8 @@ tripPresenter.init();
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)
     .then(() => {
-      // Действие, в случае успешной регистрации ServiceWorker
       console.log(`ServiceWorker available`); // eslint-disable-line
     }).catch(() => {
-      // Действие, в случае ошибки при регистрации ServiceWorker
       console.error(`ServiceWorker isn't available`); // eslint-disable-line
     });
 });

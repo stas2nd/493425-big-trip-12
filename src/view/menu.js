@@ -1,11 +1,11 @@
 import AbstractView from "./abstract.js";
 import MenuTabView from "./menu-tab.js";
-import {TAB_ARRAY, MenuItem} from "../const.js";
+import {TABS, MenuItem} from "../const.js";
 
 export default class Menu extends AbstractView {
   constructor() {
     super();
-    this._links = this._makeTemplateFromArrayClass(MenuTabView, TAB_ARRAY, {active: MenuItem.TABLE});
+    this._links = this._makeTemplateFromArrayClass(MenuTabView, TABS, {active: MenuItem.TABLE});
     this._menuClickHandler = this._menuClickHandler.bind(this);
   }
 
@@ -18,15 +18,6 @@ export default class Menu extends AbstractView {
         </nav>
       </div>`
     );
-  }
-
-  _menuClickHandler(evt) {
-    if (evt.target.tagName !== `A`) {
-      return;
-    }
-    evt.preventDefault();
-    this.setMenuItem(evt.target.dataset.tab);
-    this._callback.menuClick(evt.target.dataset.tab);
   }
 
   setMenuClickHandler(callback) {
@@ -43,5 +34,14 @@ export default class Menu extends AbstractView {
     if (targetItem !== null) {
       targetItem.classList.add(`trip-tabs__btn--active`);
     }
+  }
+
+  _menuClickHandler(evt) {
+    if (evt.target.tagName !== `A`) {
+      return;
+    }
+    evt.preventDefault();
+    this.setMenuItem(evt.target.dataset.tab);
+    this._callback.menuClick(evt.target.dataset.tab);
   }
 }

@@ -26,10 +26,6 @@ export default class Info {
     remove(prevInfoComponent);
   }
 
-  _handleModelEvent() {
-    this.init();
-  }
-
   _getInfo(events) {
     if (events.length) {
       events = [...events].sort((a, b) => a.start - b.start);
@@ -47,5 +43,9 @@ export default class Info {
       dates: null,
       price: 0
     };
+  }
+
+  _handleModelEvent() {
+    this.init();
   }
 }

@@ -1,3 +1,4 @@
+import he from "he";
 import EditingEventOptionsView from "./editing-event-options.js";
 import EditingEventDestinationItemView from "./editing-event-destination-item.js";
 import EditingEventOffersView from "./editing-event-offers.js";
@@ -67,7 +68,7 @@ export default class EditingEvent extends SmartView {
               <label class="event__label  event__type-output" for="event-destination-${this._data.id}">
                 ${this._optText} ${this._pretext}
               </label>
-              <input class="event__input  event__input--destination" id="event-destination-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-destination" value="${this._data.waypoint ? this._data.waypoint : ``}" list="destination-list-${this._data.id}">
+              <input class="event__input  event__input--destination" id="event-destination-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-destination" value="${this._data.waypoint ? he.encode(this._data.waypoint) : ``}" list="destination-list-${this._data.id}">
               <datalist id="destination-list-${this._data.id}">
                 ${this._cities}
               </datalist>
@@ -90,7 +91,7 @@ export default class EditingEvent extends SmartView {
                 <span class="visually-hidden">Price</span>
                 &euro;
               </label>
-              <input class="event__input  event__input--price" id="event-price-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-price" value="${this._data.price !== undefined && this._data.price !== null ? this._data.price : ``}">
+              <input class="event__input  event__input--price" id="event-price-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-price" value="${this._data.price !== undefined && this._data.price !== null ? he.encode(this._data.price.toString()) : ``}">
             </div>
 
             <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled || this._data.isDisabled ? `disabled` : ``}>
@@ -142,6 +143,58 @@ export default class EditingEvent extends SmartView {
     this.setDeleteClickHandler(this._callback.deleteClick);
     this.setChangeDestinationHandler(this._callback.destinationChange);
     this.setChangeActionHandler(this._callback.actionChange);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  removeFormSubmitHandler() {
+    if (this._callback.formSubmit) {
+      this.getElement().removeEventListener(`submit`, this._formSubmitHandler);
+      delete this._callback.formSubmit;
+    }
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
+  }
+
+  removeDeleteClickHandler() {
+    if (this._callback.deleteClick) {
+      this.getElement().querySelector(`.event__reset-btn`).removeEventListener(`click`, this._formDeleteClickHandler);
+      delete this._callback.deleteClick;
+    }
+  }
+
+  setFormCloseHandler(callback) {
+    this._callback.formClose = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formCloseHandler);
+  }
+
+  removeFormCloseHandler() {
+    if (this._callback.formClose) {
+      this.getElement().querySelector(`.event__rollup-btn`).removeEventListener(`click`, this._formCloseHandler);
+      delete this._callback.formClose;
+    }
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement()
+      .querySelector(`.event__favorite-btn`)
+      .addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  setChangeDestinationHandler(callback) {
+    this._callback.destinationChange = callback;
+  }
+
+  setChangeActionHandler(callback) {
+    this._callback.actionChange = callback;
   }
 
   _setStartDatepicker() {
@@ -208,9 +261,6 @@ export default class EditingEvent extends SmartView {
     this.getElement()
       .querySelector(`.event__input--price`)
       .addEventListener(`blur`, this._priceBlurHandler);
-    this.getElement()
-      .querySelector(`.event__favorite-btn`)
-      .addEventListener(`click`, this._favoriteClickHandler);
     if (this._data.offers && this._data.offers.length) {
       this.getElement()
         .querySelector(`.event__available-offers`)
@@ -239,13 +289,6 @@ export default class EditingEvent extends SmartView {
     }
     const newType = ACTIONS.find((action) => action.name === typeName);
     this._callback.actionChange(newType);
-  }
-
-  _favoriteClickHandler(evt) {
-    evt.preventDefault();
-    this.updateData({
-      isFavorite: !this._data.isFavorite
-    });
   }
 
   _destinationChangeHandler(evt) {
@@ -291,33 +334,9 @@ export default class EditingEvent extends SmartView {
     this._callback.formSubmit(EditingEvent.parseDataToEvent(this._data));
   }
 
-  setFormSubmitHandler(callback) {
-    this._callback.formSubmit = callback;
-    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
-  }
-
-  removeFormSubmitHandler() {
-    if (this._callback.formSubmit) {
-      this.getElement().removeEventListener(`submit`, this._formSubmitHandler);
-      delete this._callback.formSubmit;
-    }
-  }
-
   _formDeleteClickHandler(evt) {
     evt.preventDefault();
     this._callback.deleteClick(EditingEvent.parseDataToEvent(this._data));
-  }
-
-  setDeleteClickHandler(callback) {
-    this._callback.deleteClick = callback;
-    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
-  }
-
-  removeDeleteClickHandler() {
-    if (this._callback.deleteClick) {
-      this.getElement().querySelector(`.event__reset-btn`).removeEventListener(`click`, this._formDeleteClickHandler);
-      delete this._callback.deleteClick;
-    }
   }
 
   // 1. Обработчик на закрытие формы
@@ -326,24 +345,12 @@ export default class EditingEvent extends SmartView {
     this._callback.formClose();
   }
 
-  setFormCloseHandler(callback) {
-    this._callback.formClose = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formCloseHandler);
-  }
-
-  removeFormCloseHandler() {
-    if (this._callback.formClose) {
-      this.getElement().querySelector(`.event__rollup-btn`).removeEventListener(`click`, this._formCloseHandler);
-      delete this._callback.formClose;
-    }
-  }
-
-  setChangeDestinationHandler(callback) {
-    this._callback.destinationChange = callback;
-  }
-
-  setChangeActionHandler(callback) {
-    this._callback.actionChange = callback;
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      isFavorite: !this._data.isFavorite
+    });
+    this._callback.favoriteClick(EditingEvent.parseDataToEvent(this._data));
   }
 
   static parseEventToData(event) {
