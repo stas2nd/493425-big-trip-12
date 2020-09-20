@@ -4,7 +4,7 @@ import SmartView from "./smart.js";
 import {getMoneyInfo, getTransportInfo, getTimeInfo} from "../utils/stats.js";
 
 const BAR_HEIGHT = 55;
-
+// 2.3 Функции отрисовки диаграмм (в аргументах необходимые для этого данные)
 const renderMoneyChart = (ctx, {labels, moneys, length}) => {
   ctx.height = BAR_HEIGHT * length;
   return new Chart(ctx, {
@@ -227,6 +227,7 @@ const renderTimeChart = (ctx, {labels, times, length}) => {
   });
 };
 
+// 1. Компонент для статистики
 export default class Stats extends SmartView {
   constructor(events) {
     super();

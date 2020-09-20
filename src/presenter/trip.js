@@ -39,12 +39,14 @@ export default class Trip {
 
   init() {
     this._eventsModel.addObserver(this._handleModelEvent);
+    // 4. Фильтры влияют на список событий
     this._filterModel.addObserver(this._handleModelEvent);
 
     this._renderTrip();
   }
 
   destroy() {
+    // 5. При уничтожении списка путешествий сбрасывается выбранная сортировка
     this._clearTrip({resetSortType: true});
 
     remove(this._listDaysComponent);
