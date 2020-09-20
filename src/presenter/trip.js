@@ -87,81 +87,6 @@ export default class Trip {
     return eventsToSortingMap[this._currentSortType](filtredTasks);
   }
 
-  _handleViewAction(actionType, updateType, update) {
-    switch (actionType) {
-      case UserAction.UPDATE_EVENT:
-        this._eventPresenter[update.id].setViewState(EventPresenterViewState.SAVING);
-        this._api.updateEvent(update)
-          .then((response) => {
-            this._eventsModel.updateEvent(updateType, response);
-          })
-          .catch(() => {
-            this._eventPresenter[update.id].setViewState(EventPresenterViewState.ABORTING);
-          });
-        break;
-      case UserAction.ADD_EVENT:
-        this._eventNewPresenter.setSaving();
-        this._api.addEvent(update)
-          .then((response) => {
-            this._eventsModel.addEvent(updateType, response);
-          })
-          .catch(() => {
-            this._eventNewPresenter.setAborting();
-          });
-        break;
-      case UserAction.DELETE_EVENT:
-        this._eventPresenter[update.id].setViewState(EventPresenterViewState.DELETING);
-        this._api.deleteEvent(update)
-          .then(() => {
-            this._eventsModel.deleteEvent(updateType, update);
-          })
-          .catch(() => {
-            this._eventPresenter[update.id].setViewState(EventPresenterViewState.ABORTING);
-          });
-        break;
-    }
-  }
-
-  _handleModelEvent(updateType, data) {
-    switch (updateType) {
-      case UpdateType.PATCH:
-        this._eventPresenter[data.id].init(data);
-        break;
-      case UpdateType.MINOR:
-        this._clearTrip();
-        this._renderTrip();
-        break;
-      case UpdateType.MAJOR:
-        this._clearTrip({resetSortType: true});
-        this._renderTrip();
-        break;
-      case UpdateType.INIT:
-        this._isLoading = false;
-        remove(this._loadingComponent);
-        this._renderTrip();
-        break;
-    }
-  }
-
-  _handleModeChange() {
-    this._eventNewPresenter.destroy();
-    Object
-      .values(this._eventPresenter)
-      .forEach((presenter) => presenter.resetView());
-  }
-
-  _handleSortTypeChange(sortType) {
-    if (this._currentSortType === sortType) {
-      // 4. Список перерисовывается только в случае,
-      // если выбранная пользователем сортировка отличается от текущей
-      return;
-    }
-
-    this._currentSortType = sortType;
-    this._clearTrip();
-    this._renderTrip();
-  }
-
   // 2. Создание и отрисовка компонента Сортировки
   _renderSorting() {
     this._sortingComponent = new SortingView(this._currentSortType);
@@ -237,4 +162,78 @@ export default class Trip {
     this._renderEvents();
   }
 
+  _handleViewAction(actionType, updateType, update) {
+    switch (actionType) {
+      case UserAction.UPDATE_EVENT:
+        this._eventPresenter[update.id].setViewState(EventPresenterViewState.SAVING);
+        this._api.updateEvent(update)
+          .then((response) => {
+            this._eventsModel.updateEvent(updateType, response);
+          })
+          .catch(() => {
+            this._eventPresenter[update.id].setViewState(EventPresenterViewState.ABORTING);
+          });
+        break;
+      case UserAction.ADD_EVENT:
+        this._eventNewPresenter.setSaving();
+        this._api.addEvent(update)
+          .then((response) => {
+            this._eventsModel.addEvent(updateType, response);
+          })
+          .catch(() => {
+            this._eventNewPresenter.setAborting();
+          });
+        break;
+      case UserAction.DELETE_EVENT:
+        this._eventPresenter[update.id].setViewState(EventPresenterViewState.DELETING);
+        this._api.deleteEvent(update)
+          .then(() => {
+            this._eventsModel.deleteEvent(updateType, update);
+          })
+          .catch(() => {
+            this._eventPresenter[update.id].setViewState(EventPresenterViewState.ABORTING);
+          });
+        break;
+    }
+  }
+
+  _handleModelEvent(updateType, data) {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._eventPresenter[data.id].init(data);
+        break;
+      case UpdateType.MINOR:
+        this._clearTrip();
+        this._renderTrip();
+        break;
+      case UpdateType.MAJOR:
+        this._clearTrip({resetSortType: true});
+        this._renderTrip();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderTrip();
+        break;
+    }
+  }
+
+  _handleModeChange() {
+    this._eventNewPresenter.destroy();
+    Object
+      .values(this._eventPresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
+
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      // 4. Список перерисовывается только в случае,
+      // если выбранная пользователем сортировка отличается от текущей
+      return;
+    }
+
+    this._currentSortType = sortType;
+    this._clearTrip();
+    this._renderTrip();
+  }
 }

@@ -100,6 +100,13 @@ export default class Event {
     }
   }
 
+  destroy() {
+    remove(this._eventComponent);
+    if (this._eventEditComponent) {
+      remove(this._eventEditComponent);
+    }
+  }
+
   _replaceCardToForm() {
     this._eventEditComponent = new EditingEventView(this._eventsModel.getDestinations(), this._editEvent);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
@@ -180,12 +187,5 @@ export default class Event {
       action: act,
       offers: this._eventsModel.getOffers(act.name)
     });
-  }
-
-  destroy() {
-    remove(this._eventComponent);
-    if (this._eventEditComponent) {
-      remove(this._eventEditComponent);
-    }
   }
 }

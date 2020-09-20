@@ -20,15 +20,6 @@ export default class Menu extends AbstractView {
     );
   }
 
-  _menuClickHandler(evt) {
-    if (evt.target.tagName !== `A`) {
-      return;
-    }
-    evt.preventDefault();
-    this.setMenuItem(evt.target.dataset.tab);
-    this._callback.menuClick(evt.target.dataset.tab);
-  }
-
   setMenuClickHandler(callback) {
     this._callback.menuClick = callback;
     this.getElement().addEventListener(`click`, this._menuClickHandler);
@@ -43,5 +34,14 @@ export default class Menu extends AbstractView {
     if (targetItem !== null) {
       targetItem.classList.add(`trip-tabs__btn--active`);
     }
+  }
+
+  _menuClickHandler(evt) {
+    if (evt.target.tagName !== `A`) {
+      return;
+    }
+    evt.preventDefault();
+    this.setMenuItem(evt.target.dataset.tab);
+    this._callback.menuClick(evt.target.dataset.tab);
   }
 }

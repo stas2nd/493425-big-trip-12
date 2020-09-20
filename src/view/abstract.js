@@ -27,12 +27,6 @@ export default class Abstract {
     this._element = null;
   }
 
-  _makeTemplateFromArrayClass(CL, array, ...rest) {
-    return array ? array.reduce((accumulator, currentValue, index) => {
-      return accumulator + new CL(currentValue, [...rest, {arrayIndex: index}]).getTemplate();
-    }, ``) : ``;
-  }
-
   shake(callback) {
     this.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
     setTimeout(() => {
@@ -41,4 +35,9 @@ export default class Abstract {
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 
+  _makeTemplateFromArrayClass(CL, array, ...rest) {
+    return array ? array.reduce((accumulator, currentValue, index) => {
+      return accumulator + new CL(currentValue, [...rest, {arrayIndex: index}]).getTemplate();
+    }, ``) : ``;
+  }
 }

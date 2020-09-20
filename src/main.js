@@ -10,10 +10,10 @@ import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
 const siteHeaderElement = document.querySelector(`.page-header`);
-const siteMainElement = document.querySelector(`.page-main`);
 const siteHeaderMainElement = siteHeaderElement.querySelector(`.trip-main`);
-const siteEventsElement = siteMainElement.querySelector(`.trip-events`);
 const siteHeaderControlsElement = siteHeaderMainElement.querySelector(`.trip-controls`);
+const siteMainElement = document.querySelector(`.page-main`);
+const siteEventsElement = siteMainElement.querySelector(`.trip-events`);
 
 const api = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);

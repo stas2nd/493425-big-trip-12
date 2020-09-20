@@ -20,15 +20,15 @@ export default class Sorting extends AbstractView {
     );
   }
 
-  _sortTypeChangeHandler() {
-    // 3. С помощью свойства checked узнаем выбранный тип сортировки
-    const type = Array.from(this.getElement().querySelectorAll(`.trip-sort__input`)).find((input) => input.checked).value.slice(5);
-    this._callback.sortTypeChange(type);
-  }
-
   // 3. Установка колбэка на клик (изменение типа сортировки)
   setSortTypeChangeHandler(callback) {
     this._callback.sortTypeChange = callback;
     this.getElement().addEventListener(`click`, this._sortTypeChangeHandler);
+  }
+
+  _sortTypeChangeHandler() {
+    // 3. С помощью свойства checked узнаем выбранный тип сортировки
+    const type = Array.from(this.getElement().querySelectorAll(`.trip-sort__input`)).find((input) => input.checked).value.slice(5);
+    this._callback.sortTypeChange(type);
   }
 }

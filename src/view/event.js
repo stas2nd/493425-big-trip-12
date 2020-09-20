@@ -51,13 +51,13 @@ export default class Event extends AbstractView {
     );
   }
 
-  _editClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.editClick();
-  }
-
   setEditClickHandler(callback) {
     this._callback.editClick = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editClickHandler);
+  }
+
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 }

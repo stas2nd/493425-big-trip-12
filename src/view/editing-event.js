@@ -146,6 +146,57 @@ export default class EditingEvent extends SmartView {
     this.setFavoriteClickHandler(this._callback.favoriteClick);
   }
 
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  removeFormSubmitHandler() {
+    if (this._callback.formSubmit) {
+      this.getElement().removeEventListener(`submit`, this._formSubmitHandler);
+      delete this._callback.formSubmit;
+    }
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
+  }
+
+  removeDeleteClickHandler() {
+    if (this._callback.deleteClick) {
+      this.getElement().querySelector(`.event__reset-btn`).removeEventListener(`click`, this._formDeleteClickHandler);
+      delete this._callback.deleteClick;
+    }
+  }
+
+  setFormCloseHandler(callback) {
+    this._callback.formClose = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formCloseHandler);
+  }
+
+  removeFormCloseHandler() {
+    if (this._callback.formClose) {
+      this.getElement().querySelector(`.event__rollup-btn`).removeEventListener(`click`, this._formCloseHandler);
+      delete this._callback.formClose;
+    }
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement()
+      .querySelector(`.event__favorite-btn`)
+      .addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  setChangeDestinationHandler(callback) {
+    this._callback.destinationChange = callback;
+  }
+
+  setChangeActionHandler(callback) {
+    this._callback.actionChange = callback;
+  }
+
   _setStartDatepicker() {
     if (this._startDatepicker) {
       this._startDatepicker.destroy();
@@ -283,33 +334,9 @@ export default class EditingEvent extends SmartView {
     this._callback.formSubmit(EditingEvent.parseDataToEvent(this._data));
   }
 
-  setFormSubmitHandler(callback) {
-    this._callback.formSubmit = callback;
-    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
-  }
-
-  removeFormSubmitHandler() {
-    if (this._callback.formSubmit) {
-      this.getElement().removeEventListener(`submit`, this._formSubmitHandler);
-      delete this._callback.formSubmit;
-    }
-  }
-
   _formDeleteClickHandler(evt) {
     evt.preventDefault();
     this._callback.deleteClick(EditingEvent.parseDataToEvent(this._data));
-  }
-
-  setDeleteClickHandler(callback) {
-    this._callback.deleteClick = callback;
-    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
-  }
-
-  removeDeleteClickHandler() {
-    if (this._callback.deleteClick) {
-      this.getElement().querySelector(`.event__reset-btn`).removeEventListener(`click`, this._formDeleteClickHandler);
-      delete this._callback.deleteClick;
-    }
   }
 
   // 1. Обработчик на закрытие формы
@@ -318,39 +345,12 @@ export default class EditingEvent extends SmartView {
     this._callback.formClose();
   }
 
-  setFormCloseHandler(callback) {
-    this._callback.formClose = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formCloseHandler);
-  }
-
-  removeFormCloseHandler() {
-    if (this._callback.formClose) {
-      this.getElement().querySelector(`.event__rollup-btn`).removeEventListener(`click`, this._formCloseHandler);
-      delete this._callback.formClose;
-    }
-  }
-
   _favoriteClickHandler(evt) {
     evt.preventDefault();
     this.updateData({
       isFavorite: !this._data.isFavorite
     });
     this._callback.favoriteClick(EditingEvent.parseDataToEvent(this._data));
-  }
-
-  setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback;
-    this.getElement()
-      .querySelector(`.event__favorite-btn`)
-      .addEventListener(`click`, this._favoriteClickHandler);
-  }
-
-  setChangeDestinationHandler(callback) {
-    this._callback.destinationChange = callback;
-  }
-
-  setChangeActionHandler(callback) {
-    this._callback.actionChange = callback;
   }
 
   static parseEventToData(event) {
