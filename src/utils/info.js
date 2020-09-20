@@ -17,6 +17,6 @@ export const getDates = (events) => {
 
 export const getPrice = (events) => {
   return events.reduce((accumulator, currentValue) => {
-    return accumulator + currentValue.price + getOffersPrice(currentValue);
+    return accumulator + Number(currentValue.price) + getOffersPrice(currentValue);
   }, 0);
 };

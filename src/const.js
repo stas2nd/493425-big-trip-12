@@ -208,3 +208,6 @@ export const State = {
   ABORTING: `ABORTING`
 };
 export const SHAKE_ANIMATION_TIMEOUT = 600;
+export const STORE_PREFIX = `trip-localstorage`;
+export const STORE_VER = `v12`;
+export const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;

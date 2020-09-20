@@ -17,7 +17,7 @@ export default class EditingEvent extends SmartView {
     this._startDatepicker = null;
     this._endDatepicker = null;
 
-    this._validatedPrice = this._data.price ? true : false;
+    this._validatedPrice = this._data.price !== undefined && this._data.price !== null ? true : false;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
@@ -90,7 +90,7 @@ export default class EditingEvent extends SmartView {
                 <span class="visually-hidden">Price</span>
                 &euro;
               </label>
-              <input class="event__input  event__input--price" id="event-price-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-price" value="${this._data.price ? this._data.price : ``}">
+              <input class="event__input  event__input--price" id="event-price-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-price" value="${this._data.price !== undefined && this._data.price !== null ? this._data.price : ``}">
             </div>
 
             <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled || this._data.isDisabled ? `disabled` : ``}>
@@ -211,7 +211,7 @@ export default class EditingEvent extends SmartView {
     this.getElement()
       .querySelector(`.event__favorite-btn`)
       .addEventListener(`click`, this._favoriteClickHandler);
-    if (this._data.offers) {
+    if (this._data.offers && this._data.offers.length) {
       this.getElement()
         .querySelector(`.event__available-offers`)
         .addEventListener(`click`, this._offersChangeHandler);
@@ -260,7 +260,7 @@ export default class EditingEvent extends SmartView {
   }
 
   _priceInputHandler(evt) {
-    this._validatedPrice = /^[1-9]\d*$/.test(evt.target.value);
+    this._validatedPrice = /^[0-9]\d*$/.test(evt.target.value);
     this.getElement().querySelector(`.event__save-btn`).disabled = !this._validatedPrice;
   }
 
