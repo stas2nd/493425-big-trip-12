@@ -1,11 +1,11 @@
 import AbstractView from "./abstract.js";
 import MenuTabView from "./menu-tab.js";
-import {TAB_ARRAY, MenuItem} from "../const.js";
+import {TABS, MenuItem} from "../const.js";
 
 export default class Menu extends AbstractView {
   constructor() {
     super();
-    this._links = this._makeTemplateFromArrayClass(MenuTabView, TAB_ARRAY, {active: MenuItem.TABLE});
+    this._links = this._makeTemplateFromArrayClass(MenuTabView, TABS, {active: MenuItem.TABLE});
     this._menuClickHandler = this._menuClickHandler.bind(this);
   }
 

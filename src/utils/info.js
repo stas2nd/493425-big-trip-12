@@ -1,7 +1,7 @@
 import {formatEventDate, getOffersPrice} from "../utils/event.js";
 
 export const getRoute = (events) => {
-  let cities = events.map((city) => city.waypoint);
+  const cities = events.map((city) => city.waypoint);
   const firstCity = cities[0];
   const lastCity = cities[cities.length - 1];
   const medianaCity = cities.length > 2 ? `...` : cities[Math.floor(cities.length / 2)];

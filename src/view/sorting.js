@@ -1,13 +1,13 @@
 import AbstractView from "./abstract.js";
 import SortingItemView from "./sorting-item.js";
-import {SORT_ITEM_ARRAY} from "../const.js";
+import {SORT_ITEMS} from "../const.js";
 
 // 1. Компонент сортировки
 export default class Sorting extends AbstractView {
   constructor(currentSortType) {
     super();
     this._currentSortType = currentSortType;
-    this._sortings = this._makeTemplateFromArrayClass(SortingItemView, SORT_ITEM_ARRAY, {type: this._currentSortType});
+    this._sortings = this._makeTemplateFromArrayClass(SortingItemView, SORT_ITEMS, {type: this._currentSortType});
 
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }

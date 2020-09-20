@@ -34,7 +34,7 @@ export default class Event extends AbstractView {
           </div>
 
           <p class="event__price">
-            &euro;&nbsp;<span class="event__price-value">${he.encode(this._event.price + ``)}</span>
+            &euro;&nbsp;<span class="event__price-value">${he.encode(this._event.price.toString())}</span>
           </p>
           ${this._event.offers ?
         `<h4 class="visually-hidden">Offers:</h4>

@@ -91,7 +91,7 @@ export default class EditingEvent extends SmartView {
                 <span class="visually-hidden">Price</span>
                 &euro;
               </label>
-              <input class="event__input  event__input--price" id="event-price-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-price" value="${this._data.price !== undefined && this._data.price !== null ? he.encode(this._data.price + ``) : ``}">
+              <input class="event__input  event__input--price" id="event-price-${this._data.id}" ${this._data.isDisabled ? `disabled` : ``} type="text" name="event-price" value="${this._data.price !== undefined && this._data.price !== null ? he.encode(this._data.price.toString()) : ``}">
             </div>
 
             <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled || this._data.isDisabled ? `disabled` : ``}>
