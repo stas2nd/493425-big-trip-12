@@ -1,5 +1,6 @@
 import FilterView from "../view/filter.js";
 import {render, replace, remove} from "../utils/render.js";
+import {filter} from "../utils/filters.js";
 import {FilterType, UpdateType} from "../const.js";
 
 export default class Filter {
@@ -52,15 +53,18 @@ export default class Filter {
     return [
       {
         value: FilterType.EVERYTHING,
-        text: `Everything`
+        text: `Everything`,
+        disabled: !filter[FilterType.EVERYTHING](this._eventsModel.getEvents()).length
       },
       {
         value: FilterType.FUTURE,
-        text: `Future`
+        text: `Future`,
+        disabled: !filter[FilterType.FUTURE](this._eventsModel.getEvents()).length
       },
       {
         value: FilterType.PAST,
-        text: `Past`
+        text: `Past`,
+        disabled: !filter[FilterType.PAST](this._eventsModel.getEvents()).length
       }
     ];
   }

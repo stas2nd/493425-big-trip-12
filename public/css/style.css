@@ -262,6 +262,9 @@ main {
     opacity: 1; }
   .trip-filters__filter-label:active {
     opacity: 0.6; }
+  .trip-filters__filter-label--disabled {
+    pointer-events: none;
+    opacity: 0.2; }
 
 .trip-filters__filter-input:checked + .trip-filters__filter-label {
   opacity: 1;

@@ -11,7 +11,7 @@ export default class FilterItem extends AbstractView {
     return (
       `<div class="trip-filters__filter">
         <input id="filter-${this._filter.value}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${this._filter.value}" ${this._currentFilterType === this._filter.value ? `checked` : ``}>
-        <label class="trip-filters__filter-label" for="filter-${this._filter.value}">${this._filter.text}</label>
+        <label class="trip-filters__filter-label ${this._filter.disabled ? `trip-filters__filter-label--disabled` : ``}" for="filter-${this._filter.value}">${this._filter.text}</label>
       </div>`
     );
   }
