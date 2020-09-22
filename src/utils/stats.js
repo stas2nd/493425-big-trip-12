@@ -2,8 +2,8 @@ import {ACTIONS} from "../const.js";
 import {getDiffTimeHours} from "./event.js";
 
 export const getMoneyInfo = (events) => {
-  let actions = [];
-  for (let event of [...events]) {
+  const actions = [];
+  for (const event of [...events]) {
     const match = ACTIONS.find((action) => action.name === event.action.name);
     const existIndex = match ? actions.findIndex((label) => label.name === match.label.name) : -1;
     if (match && existIndex !== -1) {
@@ -21,9 +21,9 @@ export const getMoneyInfo = (events) => {
 };
 
 export const getTransportInfo = (events) => {
-  let actions = [];
+  const actions = [];
   events = events.filter((event) => event.action.type === `transport`);
-  for (let event of [...events]) {
+  for (const event of [...events]) {
     const match = ACTIONS.find((action) => action.name === event.action.name);
     const existIndex = match ? actions.findIndex((label) => label.name === match.label.name) : -1;
     if (match && existIndex !== -1) {
@@ -41,8 +41,8 @@ export const getTransportInfo = (events) => {
 };
 
 export const getTimeInfo = (events) => {
-  let actions = [];
-  for (let event of [...events]) {
+  const actions = [];
+  for (const event of [...events]) {
     const match = ACTIONS.find((action) => action.name === event.action.name);
     const textObject = match && match.type === `transport` ? {text: match.label.icon + ` TO ` + event.waypoint.toUpperCase()} : {text: match.label.icon + ` ` + match.label.alternative};
     const existIndex = match ? actions.findIndex((act) => act.text === textObject.text) : -1;

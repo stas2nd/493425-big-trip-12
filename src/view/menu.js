@@ -27,7 +27,7 @@ export default class Menu extends AbstractView {
 
   setMenuItem(menuItem) {
     const items = this.getElement().querySelectorAll(`.trip-tabs__btn`);
-    for (let item of items) {
+    for (const item of items) {
       item.classList.remove(`trip-tabs__btn--active`);
     }
     const targetItem = this.getElement().querySelector(`[data-tab=${menuItem}]`);

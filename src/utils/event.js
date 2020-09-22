@@ -65,7 +65,7 @@ export const formatHours = (date) => {
 
 export const getDayEvents = (events) => {
   events = [...events].sort((a, b) => a.start - b.start);
-  let eventDays = [];
+  const eventDays = [];
   events.forEach((event) => {
     const date = new Date(event.start).setHours(0, 0, 0, 0);
     if (!eventDays.length || date - eventDays[eventDays.length - 1].day !== 0) {
