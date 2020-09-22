@@ -22,6 +22,7 @@ export const getMoneyInfo = (events) => {
 
 export const getTransportInfo = (events) => {
   let actions = [];
+  events = events.filter((event) => event.action.type === `transport`);
   for (let event of [...events]) {
     const match = ACTIONS.find((action) => action.name === event.action.name);
     const existIndex = match ? actions.findIndex((label) => label.name === match.label.name) : -1;
