@@ -12,8 +12,8 @@ import EventPresenter from "./event.js";
 import EventNewPresenter from "./event-new.js";
 
 export default class Trip {
-  constructor(tripContainer, eventsModel, filterModel, api) {
-    this._tripContainer = tripContainer;
+  constructor(container, eventsModel, filterModel, api) {
+    this._container = container;
     this._eventsModel = eventsModel;
     this._filterModel = filterModel;
     this._currentSortType = SortType.EVENT;
@@ -22,8 +22,6 @@ export default class Trip {
     this._api = api;
 
     this._sortingComponent = null;
-    this._cities = null;
-    this._offers = null;
 
     this._listDaysComponent = new ListDaysView();
     this._noEventsComponent = new NoEventsView();
@@ -34,7 +32,7 @@ export default class Trip {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    this._eventNewPresenter = new EventNewPresenter(this._tripContainer, this._handleViewAction, this._eventsModel);
+    this._eventNewPresenter = new EventNewPresenter(this._container, this._handleViewAction, this._eventsModel);
   }
 
   init() {
@@ -42,12 +40,12 @@ export default class Trip {
     // 4. Фильтры влияют на список событий
     this._filterModel.addObserver(this._handleModelEvent);
 
-    this._renderTrip();
+    this._render();
   }
 
   destroy() {
     // 5. При уничтожении списка путешествий сбрасывается выбранная сортировка
-    this._clearTrip({resetSortType: true});
+    this._clear({resetSortType: true});
 
     remove(this._listDaysComponent);
 
@@ -57,14 +55,14 @@ export default class Trip {
 
   createEvent(callback) {
     this._currentSortType = SortType.EVENT;
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._filterModel.set(UpdateType.MAJOR, FilterType.EVERYTHING);
     remove(this._noEventsComponent);
     this._eventNewPresenter.init(callback);
   }
 
   _getEvents() {
-    const filterType = this._filterModel.getFilter();
-    const filtredTasks = filter[filterType](this._eventsModel.getEvents());
+    const filterType = this._filterModel.get();
+    const filtredTasks = filter[filterType](this._eventsModel.get());
 
     // 5. Получаемые события фильтруются согласно выбранной сортировки
     const eventsToSortingMap = {
@@ -90,13 +88,13 @@ export default class Trip {
   // 2. Создание и отрисовка компонента Сортировки
   _renderSorting() {
     this._sortingComponent = new SortingView(this._currentSortType);
-    render(this._tripContainer, this._sortingComponent);
+    render(this._container, this._sortingComponent);
     // 3. Установка колбэка на изменение активного типа сортировки
     this._sortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderListDays() {
-    render(this._tripContainer, this._listDaysComponent);
+    render(this._container, this._listDaysComponent);
   }
 
   _renderDay(dayInfo, index) {
@@ -122,14 +120,14 @@ export default class Trip {
   }
 
   _renderLoading() {
-    render(this._tripContainer, this._loadingComponent);
+    render(this._container, this._loadingComponent);
   }
 
   _renderNoEvents() {
-    render(this._tripContainer, this._noEventsComponent);
+    render(this._container, this._noEventsComponent);
   }
 
-  _clearTrip({resetSortType = false} = {}) {
+  _clear({resetSortType = false} = {}) {
     this._eventNewPresenter.destroy();
     Object
       .values(this._eventPresenter)
@@ -146,13 +144,13 @@ export default class Trip {
     }
   }
 
-  _renderTrip() {
+  _render() {
     if (this._isLoading) {
       this._renderLoading();
       return;
     }
     // 2. Приглашение добавить первую точку маршрута, если таковые отсутствуют
-    if (!this._eventsModel.getEvents().length) {
+    if (!this._eventsModel.get().length) {
       this._renderNoEvents();
       return;
     }
@@ -168,7 +166,7 @@ export default class Trip {
         this._eventPresenter[update.id].setViewState(EventPresenterViewState.SAVING);
         this._api.updateEvent(update)
           .then((response) => {
-            this._eventsModel.updateEvent(updateType, response);
+            this._eventsModel.update(updateType, response);
           })
           .catch(() => {
             this._eventPresenter[update.id].setViewState(EventPresenterViewState.ABORTING);
@@ -178,7 +176,7 @@ export default class Trip {
         this._eventNewPresenter.setSaving();
         this._api.addEvent(update)
           .then((response) => {
-            this._eventsModel.addEvent(updateType, response);
+            this._eventsModel.add(updateType, response);
           })
           .catch(() => {
             this._eventNewPresenter.setAborting();
@@ -188,7 +186,7 @@ export default class Trip {
         this._eventPresenter[update.id].setViewState(EventPresenterViewState.DELETING);
         this._api.deleteEvent(update)
           .then(() => {
-            this._eventsModel.deleteEvent(updateType, update);
+            this._eventsModel.delete(updateType, update);
           })
           .catch(() => {
             this._eventPresenter[update.id].setViewState(EventPresenterViewState.ABORTING);
@@ -197,23 +195,23 @@ export default class Trip {
     }
   }
 
-  _handleModelEvent(updateType, data) {
+  _handleModelEvent(updateType, event) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._eventPresenter[data.id].init(data);
+        this._eventPresenter[event.id].init(event);
         break;
       case UpdateType.MINOR:
-        this._clearTrip();
-        this._renderTrip();
+        this._clear();
+        this._render();
         break;
       case UpdateType.MAJOR:
-        this._clearTrip({resetSortType: true});
-        this._renderTrip();
+        this._clear({resetSortType: true});
+        this._render();
         break;
       case UpdateType.INIT:
         this._isLoading = false;
         remove(this._loadingComponent);
-        this._renderTrip();
+        this._render();
         break;
     }
   }
@@ -233,7 +231,7 @@ export default class Trip {
     }
 
     this._currentSortType = sortType;
-    this._clearTrip();
-    this._renderTrip();
+    this._clear();
+    this._render();
   }
 }

@@ -4,13 +4,13 @@ import EditingEventDestinationItemView from "./editing-event-destination-item.js
 import EditingEventOffersView from "./editing-event-offers.js";
 import EditingEventDestinationView from "./editing-event-destination.js";
 import SmartView from "./smart.js";
-import {ACTIONS, BLANK_EVENT} from "../const.js";
+import {ACTIONS} from "../const.js";
 import flatpickr from "flatpickr";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 export default class EditingEvent extends SmartView {
-  constructor(destinations, event = BLANK_EVENT) {
+  constructor(destinations, event) {
     super();
     this._data = EditingEvent.parseEventToData(event);
     this._destinations = destinations;
@@ -18,7 +18,7 @@ export default class EditingEvent extends SmartView {
     this._startDatepicker = null;
     this._endDatepicker = null;
 
-    this._validatedPrice = this._data.price !== undefined && this._data.price !== null ? true : false;
+    this._validatedPrice = this._data.price !== undefined && this._data.price !== null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
@@ -365,14 +365,14 @@ export default class EditingEvent extends SmartView {
     );
   }
 
-  static parseDataToEvent(data) {
-    data = Object.assign({}, data);
+  static parseDataToEvent(formattedEvent) {
+    formattedEvent = Object.assign({}, formattedEvent);
 
-    delete data.isDisabled;
-    delete data.isSaving;
-    delete data.isDeleting;
+    delete formattedEvent.isDisabled;
+    delete formattedEvent.isSaving;
+    delete formattedEvent.isDeleting;
 
-    return data;
+    return formattedEvent;
   }
 
 }

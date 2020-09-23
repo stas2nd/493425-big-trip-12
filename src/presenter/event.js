@@ -55,7 +55,7 @@ export default class Event {
     }
 
     if (this._mode === `EDITING`) {
-      this._eventEditComponent = new EditingEventView(this._eventsModel.getDestinations(), this._editEvent);
+      this._setEditingEvent();
       replace(this._eventEditComponent, prevEventEditComponent);
     }
 
@@ -107,7 +107,7 @@ export default class Event {
     }
   }
 
-  _replaceCardToForm() {
+  _setEditingEvent() {
     this._eventEditComponent = new EditingEventView(this._eventsModel.getDestinations(), this._editEvent);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
@@ -116,6 +116,10 @@ export default class Event {
     this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
     this._eventEditComponent.setChangeDestinationHandler(this._handleChangeDestination);
     this._eventEditComponent.setChangeActionHandler(this._handleChangeAction);
+  }
+
+  _replaceCardToForm() {
+    this._setEditingEvent();
     replace(this._eventEditComponent, this._eventComponent);
     // 1. Устанавливаем колбэк на esc клавишу для закрытия формы/замена на обычную точку маршрута
     document.addEventListener(`keydown`, this._escKeyDownHandler);

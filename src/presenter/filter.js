@@ -4,55 +4,55 @@ import {filter} from "../utils/filters.js";
 import {FilterType, UpdateType} from "../const.js";
 
 export default class Filter {
-  constructor(filterContainer, filterModel, eventsModel) {
-    this._filterContainer = filterContainer;
-    this._filterModel = filterModel;
+  constructor(container, model, eventsModel) {
+    this._container = container;
+    this._model = model;
     this._eventsModel = eventsModel;
-    this._currentFilter = null;
+    this._current = null;
 
-    this._filterComponent = null;
+    this._component = null;
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
-    this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
+    this._handleTypeChange = this._handleTypeChange.bind(this);
 
     this._eventsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
+    this._model.addObserver(this._handleModelEvent);
   }
 
   init() {
-    this._currentFilter = this._filterModel.getFilter();
+    this._current = this._model.get();
 
-    const filters = this._getFilters();
-    const prevFilterComponent = this._filterComponent;
+    const filters = this._get();
+    const prevComponent = this._component;
 
-    this._filterComponent = new FilterView(filters, this._currentFilter);
-    this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
+    this._component = new FilterView(filters, this._current);
+    this._component.setTypeChangeHandler(this._handleTypeChange);
 
-    if (prevFilterComponent === null) {
-      render(this._filterContainer, this._filterComponent);
+    if (prevComponent === null) {
+      render(this._container, this._component);
       return;
     }
 
-    replace(this._filterComponent, prevFilterComponent);
-    remove(prevFilterComponent);
+    replace(this._component, prevComponent);
+    remove(prevComponent);
   }
 
-  _getFilters() {
+  _get() {
     return [
       {
         value: FilterType.EVERYTHING,
         text: `Everything`,
-        disabled: !filter[FilterType.EVERYTHING](this._eventsModel.getEvents()).length
+        disabled: !filter[FilterType.EVERYTHING](this._eventsModel.get()).length
       },
       {
         value: FilterType.FUTURE,
         text: `Future`,
-        disabled: !filter[FilterType.FUTURE](this._eventsModel.getEvents()).length
+        disabled: !filter[FilterType.FUTURE](this._eventsModel.get()).length
       },
       {
         value: FilterType.PAST,
         text: `Past`,
-        disabled: !filter[FilterType.PAST](this._eventsModel.getEvents()).length
+        disabled: !filter[FilterType.PAST](this._eventsModel.get()).length
       }
     ];
   }
@@ -61,11 +61,11 @@ export default class Filter {
     this.init();
   }
 
-  _handleFilterTypeChange(filterType) {
-    if (this._currentFilter === filterType) {
+  _handleTypeChange(type) {
+    if (this._current === type) {
       return;
     }
 
-    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
+    this._model.set(UpdateType.MAJOR, type);
   }
 }

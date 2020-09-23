@@ -1,6 +1,6 @@
 import AbstractView from "./abstract.js";
 
-export default class EditingEventOffer extends AbstractView {
+export default class EditingEventOfferItem extends AbstractView {
   constructor(offer, rest) {
     super();
     this._offer = offer;

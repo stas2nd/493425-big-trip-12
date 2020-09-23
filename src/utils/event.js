@@ -1,8 +1,6 @@
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
 momentDurationFormatSetup(moment);
-import {ACTIONS} from "../const.js";
-import {getRandomInteger} from "./common.js";
 
 const getCurrentDate = () => {
   const currentDate = new Date();
@@ -25,10 +23,6 @@ const sortObjectsFunction = (a, b) => {
   return 0;
 };
 
-export const getRandomAction = () => {
-  return ACTIONS[getRandomInteger(0, ACTIONS.length - 1)];
-};
-
 export const isPastEvent = (date) => {
   return date.end && moment(getCurrentDate()).isAfter(date.end, `day`);
 };
@@ -47,7 +41,7 @@ export const getOffersPrice = (event) => {
 };
 
 export const formatEventDate = (date) => {
-  return date instanceof Date ? moment(date).format(`D MMMM`) : ``;
+  return date instanceof Date ? moment(date).format(`D MMM`) : ``;
 };
 
 // 8. Продолжительность каждой точки в заданном формате с помощью библиотеки moment
@@ -85,9 +79,9 @@ export const isDatesEqual = (dateA, dateB) => {
   return (dateA === null && dateB === null) || moment(dateA).isSame(dateB, `day`);
 };
 
-export const isArraysEqual = (arrayA, arrayB) => {
-  [arrayA, arrayB] = [arrayA ? [...arrayA] : [], arrayB ? [...arrayB] : []];
-  return arrayA.length === arrayB.length && arrayA.sort(sortObjectsFunction).every((value, index) => {
-    return isObjectsEqual(value, arrayB.sort(sortObjectsFunction)[index]);
+export const isArraysEqual = (a, b) => {
+  [a, b] = [a ? [...a] : [], b ? [...b] : []];
+  return a.length === b.length && a.sort(sortObjectsFunction).every((value, index) => {
+    return isObjectsEqual(value, b.sort(sortObjectsFunction)[index]);
   });
 };

@@ -15,7 +15,7 @@ export default class Info {
 
   init() {
     const prevInfoComponent = this._infoComponent;
-    this._infoComponent = new HeadInfoView(this._getInfo(this._eventsModel.getEvents()));
+    this._infoComponent = new HeadInfoView(this._getInfo(this._eventsModel.get()));
 
     if (prevInfoComponent === null) {
       render(this._headerContainer, this._infoComponent, true);

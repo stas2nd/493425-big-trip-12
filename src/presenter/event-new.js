@@ -29,7 +29,7 @@ export default class EventNew {
       return;
     }
 
-    this._eventEditComponent = new EditingEventView(this._cities);
+    this._eventEditComponent = new EditingEventView(this._cities, Object.assign({}, BLANK_EVENT, {offers: this._offers}));
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
     this._eventEditComponent.setFormCloseHandler(this._handleDeleteClick);

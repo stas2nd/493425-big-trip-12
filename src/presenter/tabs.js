@@ -42,7 +42,7 @@ export default class Tabs {
         // 4. Удаление компонента статистики
         remove(this._statsComponent);
         this._tripPresenter.destroy();
-        this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+        this._filterModel.set(UpdateType.MAJOR, FilterType.EVERYTHING);
         this._tripPresenter.init();
         this._tripPresenter.createEvent(this._handleEventNewFormClose);
         document.querySelector(`.trip-main__event-add-btn`).disabled = true;
@@ -57,7 +57,7 @@ export default class Tabs {
         // 5. В destroy сбрасывается выбранная сортировка
         this._tripPresenter.destroy();
         // 4. Отрисовка компонента статистики
-        this._statsComponent = new StatsView(this._eventsModel.getEvents());
+        this._statsComponent = new StatsView(this._eventsModel.get());
         render(this._eventsContainer, this._statsComponent);
         break;
     }

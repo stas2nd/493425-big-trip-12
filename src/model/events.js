@@ -14,7 +14,7 @@ export default class Events extends Observer {
     this._notify(updateType);
   }
 
-  getEvents() {
+  get() {
     return this._events;
   }
 
@@ -30,7 +30,7 @@ export default class Events extends Observer {
     return [...this._destinations].find((city) => city.name === destination);
   }
 
-  updateEvent(updateType, update) {
+  update(updateType, update) {
     const index = this._events.findIndex((event) => event.id === update.id);
 
     if (index === -1) {
@@ -46,16 +46,16 @@ export default class Events extends Observer {
     this._notify(updateType, update);
   }
 
-  addEvent(updateType, update) {
+  add(updateType, update) {
     this._events = [
-      Object.assign(update, {id: this._events.length}),
+      update,
       ...this._events
     ];
 
     this._notify(updateType, update);
   }
 
-  deleteEvent(updateType, update) {
+  delete(updateType, update) {
     const index = this._events.findIndex((event) => event.id === update.id);
 
     if (index === -1) {

@@ -5,7 +5,7 @@ export default class Day extends AbstractView {
   constructor(day, index) {
     super();
     this._day = day;
-    this._index = day ? index += 1 : ``;
+    this._index = day ? index + 1 : ``;
   }
 
   getTemplate() {

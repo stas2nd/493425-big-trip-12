@@ -6,7 +6,7 @@ export default class Filter extends AbstractView {
     super();
     this._filters = this._makeTemplateFromArrayClass(FilterItemView, filters, {type: currentFilterType});
 
-    this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
+    this._typeChangeHandler = this._typeChangeHandler.bind(this);
   }
 
   getTemplate() {
@@ -21,14 +21,14 @@ export default class Filter extends AbstractView {
     );
   }
 
-  setFilterTypeChangeHandler(callback) {
-    this._callback.filterTypeChange = callback;
-    this.getElement().addEventListener(`change`, this._filterTypeChangeHandler);
+  setTypeChangeHandler(callback) {
+    this._callback.typeChange = callback;
+    this.getElement().addEventListener(`change`, this._typeChangeHandler);
   }
 
-  _filterTypeChangeHandler(evt) {
+  _typeChangeHandler(evt) {
     evt.preventDefault();
-    this._callback.filterTypeChange(evt.target.value);
+    this._callback.typeChange(evt.target.value);
   }
 
 }

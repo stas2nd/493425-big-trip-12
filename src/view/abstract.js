@@ -35,9 +35,9 @@ export default class Abstract {
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 
-  _makeTemplateFromArrayClass(CL, array, ...rest) {
-    return array ? array.reduce((accumulator, currentValue, index) => {
-      return accumulator + new CL(currentValue, [...rest, {arrayIndex: index}]).getTemplate();
+  _makeTemplateFromArrayClass(CL, items, ...rest) {
+    return items ? items.reduce((accumulator, currentValue, index) => {
+      return accumulator + new CL(currentValue, [...rest, {itemIndex: index}]).getTemplate();
     }, ``) : ``;
   }
 }
